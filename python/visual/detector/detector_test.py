@@ -41,13 +41,21 @@ class TestListener(CameraListener):
             cv2.imshow("object", labeledImage)
 
 
-
 if __name__ == '__main__':
+    # 建立相機監聽器
     monitor = CameraMonitor(0)
+    # 註冊物品辨識器到監聽器
     monitor.registerDetector(FaceDetector(FACE_DETECTOR_ID), False)
+    # 註冊臉部辨識器到監聽器
     monitor.registerDetector(ObjectDetector(OBJECT_DETECTOR_ID), False)
+
+    # 啟用臉部辨識器
     monitor.setDetectorEnable(FACE_DETECTOR_ID, True)
+    # 啟用物品辨識器
     monitor.setDetectorEnable(OBJECT_DETECTOR_ID, True)
 
+    # 傳入自訂義的顯示方法
     monitor.setListener(TestListener())
+
+    # 開始辨識
     monitor.start()

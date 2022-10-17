@@ -1,15 +1,28 @@
-import { createServer, IncomingMessage, ServerResponse } from 'http';
+import  express, { Express, Request, Response } from 'express';
  
 const port = 80;
- 
-const server = createServer((request: IncomingMessage, response: ServerResponse) => {
 
-  response.on('error', (err) => {
-    console.error(err);
-  });
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end('Hello world!');
-});
+const app: Express = express();
 
-server.listen(port);
-console.log(`server is running on http://localhost:80`)
+app.get('/about-me', (request: Request, response: Response) => {
+  response.type('text/plain');
+  response.send('My name is Jimmy.');
+})
+
+// public資料夾的檔案會被顯示在網頁上
+app.use(express.static(__dirname + '/public')); 
+
+
+//  **很重要**
+//  一定要在全部express.use或get之後，否則會永遠顯示找不到網頁
+app.use((request: Request, response: Response) => {
+  response.type('text/plain');
+  response.status(404)
+  response.send('找不到網頁');
+})
+// --------------------
+
+// 開啟伺服器
+app.listen(port, () => {
+  console.log(`server is running on http://localhost:80`)}
+);

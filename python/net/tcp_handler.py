@@ -13,13 +13,9 @@ class PackageHandler:
     def handle(self, data: bytes):
         for b in data:
             self.buffer.append(b)
-
         indexOfFirstEOL = self.__getIndexOfFirstEOL(self.buffer)
         while indexOfFirstEOL != -1:
-            # remove \n,add to packages array.
             self.packages.append(self.buffer[0:indexOfFirstEOL])
-
-            # remove from content to \n in buffer.
             del self.buffer[0:indexOfFirstEOL + len(self.__EOL)]
             indexOfFirstEOL = self.__getIndexOfFirstEOL(self.buffer)
 
@@ -33,6 +29,12 @@ class PackageHandler:
             return b
         else:
             raise RuntimeError("No package")
+
+    def convertToPackage(self, data: bytes) -> bytes:
+        buffer = bytearray(len(data) + len(self.__EOL))
+        buffer[0:len(data)] = data
+        buffer[len(data):] = self.__EOL
+        return bytes(buffer)
 
     def __getIndexOfFirstEOL(self, data):
         for i in range(0, len(data)):

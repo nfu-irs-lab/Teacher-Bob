@@ -14,11 +14,11 @@ if __name__ == "__main__":
         print("Connected:", address)
         try:
             while True:
-                data = client.recv(1024)
+                data = client.recv(4096)
                 print("receive:")
                 print(data)
 
-                strs=data.decode(encoding='utf-8')
+                strs = data.decode(encoding='utf-8')
 
                 if strs.__contains__(EOP):
                     print(strs.index(strs))

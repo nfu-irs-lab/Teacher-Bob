@@ -38,7 +38,10 @@ class Listener(CameraListener):
             cv2.imshow("r", image)
             s = json.dumps(l)
             print(s)
-            self.client.send(self.handler.convertToPackage(s.encode(encoding='utf-8')))
+            try:
+                self.client.send(self.handler.convertToPackage(s.encode(encoding='utf-8')))
+            except Exception as e:
+                print(e.__str__())
 
         elif _id == 2:
             # 辨識到臉部時
@@ -49,7 +52,10 @@ class Listener(CameraListener):
             cv2.imshow("r", image)
             s = json.dumps(l)
             print(s)
-            self.client.send(self.handler.convertToPackage(s.encode(encoding='utf-8')))
+            try:
+                self.client.send(self.handler.convertToPackage(s.encode(encoding='utf-8')))
+            except Exception as e:
+                print(e.__str__())
 
     def onNothingDetected(self, _id, image):
         cv2.imshow("r", image)
@@ -86,6 +92,8 @@ class MainProgram:
 
             except Exception as e:
                 print(e.__str__())
+            self.monitor.setDetectorEnable(ID_OBJECT,False)
+            self.monitor.setDetectorEnable(ID_FACE,False)
 
     def handleCommand(self, command: str):
         if command.startswith(CMD_OBJECT_DETECTOR):

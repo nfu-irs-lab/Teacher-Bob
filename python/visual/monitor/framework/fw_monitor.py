@@ -15,6 +15,10 @@ class CameraListener(ABC):
     def onDetect(self, _id, image, data: List[DetectorData]):
         pass
 
+    @abc.abstractmethod
+    def onNothingDetected(self, _id, image):
+        pass
+
 
 class VideoMonitor(threading.Thread):
 
@@ -48,8 +52,11 @@ class VideoMonitor(threading.Thread):
 
             result = detector.detect(image)
             if len(result) != 0:
-                if not self._listener is None:
+                if self._listener is not None:
                     self._listener.onDetect(detector.getId(), image, result)
+            else:
+                if self._listener is not None:
+                    self._listener.onNothingDetected(detector.getId(), image)
 
     def _isEnable(self, detectorId):
         for enable_id in self.__detector_enablers:

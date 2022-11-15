@@ -1,12 +1,18 @@
+import csv
 import json
+import re
 import socket
+import time
 from typing import List
 
 import cv2
+from serial.tools.list_ports_linux import comports
 
 from net.tcp_handler import PackageHandler
-from visual.detector.concrete.face_detect_deepface import FaceDetector
+from robot.concrete.crt_dynamixel import Dynamixel
+from robot.concrete.servo_utils import CSVServoAgent
 from visual.detector.concrete.object_detect_yolov5 import ObjectDetector
+from visual.detector.concrete.face_detect_deepface import FaceDetector
 from visual.detector.framework.detector import DetectorData
 from visual.monitor.concrete.crt_camera import CameraMonitor
 from visual.monitor.framework.fw_monitor import CameraListener
@@ -14,6 +20,7 @@ from visual.utils.visual_utils import annotateLabel
 
 EOP = bytes([0xe2, 0x80, 0xA9]).decode('utf-8')
 
+bot_description = ".*FT232R.*"
 CMD_OBJECT_DETECTOR = "OBJECT_DETECTOR "
 CMD_FACE_DETECTOR = "FACE_DETECTOR "
 
@@ -73,9 +80,18 @@ class MainProgram:
         self.monitor = CameraMonitor(0, 1)
         self.monitor.registerDetector(ObjectDetector(1, 0.5), False)
         self.monitor.registerDetector(FaceDetector(2), False)
+        self.robot = self.initialize_robot()
+
+    def initialize_robot(self):
+        robot = Dynamixel(self.getSerialNameByDescription(bot_description), 115200)
+        agent = CSVServoAgent("servos.csv")
+        for servo in agent.getDefinedServos():
+            robot.appendServo(servo)
+        return robot
 
     def run(self):
         self.monitor.start()
+        self.robot.open()
         while True:
             client, address = self.server.accept()
             self.monitor.setListener(Listener(self.handler, client))
@@ -92,8 +108,8 @@ class MainProgram:
 
             except Exception as e:
                 print(e.__str__())
-            self.monitor.setDetectorEnable(ID_OBJECT,False)
-            self.monitor.setDetectorEnable(ID_FACE,False)
+            self.monitor.setDetectorEnable(ID_OBJECT, False)
+            self.monitor.setDetectorEnable(ID_FACE, False)
 
     def handleCommand(self, command: str):
         if command.startswith(CMD_OBJECT_DETECTOR):
@@ -107,6 +123,48 @@ class MainProgram:
                 self.monitor.setDetectorEnable(ID_FACE, True)
             elif command[len(CMD_FACE_DETECTOR):] == "DISABLE":
                 self.monitor.setDetectorEnable(ID_FACE, False)
+        elif command.startswith("ROBOT_DO "):
+            csv_file = command[len("ROBOT_DO "):]
+            try:
+                self.doRobotAction(csv_file)
+            except Exception as e:
+                print(e.__str__())
+
+
+    def getSerialNameByDescription(self, description: str):
+        for port in comports():
+            if re.search(description, port.description):
+                return port.device
+        raise Exception(description + " not found.")
+
+    def doRobotAction(self, csv_file):
+        with open(csv_file, newline='') as file:
+            rows = csv.reader(file, delimiter=",")
+            line = 0
+            for row in rows:
+                if line == 0:
+                    pass
+                else:
+                    if len(row) == 0:
+                        continue
+
+                    servoId = row[0]
+                    position = row[1]
+                    speed = row[2]
+                    delay = row[3]
+
+                    if not delay == '':
+                        time.sleep(float(delay))
+
+                    if servoId == '':
+                        continue
+
+                    if not speed == '':
+                        self.robot.setVelocity(int(servoId), int(speed))
+
+                    if not position == '':
+                        self.robot.setGoalPosition(int(servoId), int(position))
+                line = line + 1
 
 
 if __name__ == "__main__":

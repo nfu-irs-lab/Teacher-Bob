@@ -33,13 +33,13 @@ class DynamixelServo(abc.ABC):
     def getMovingAddressLength(self):
         pass
 
-    @abc.abstractmethod
-    def position_to_angle(self, position: int):
-        pass
-
-    @abc.abstractmethod
-    def angle_to_position(self, angle: float):
-        pass
+    # @abc.abstractmethod
+    # def position_to_angle(self, position: int):
+    #     pass
+    #
+    # @abc.abstractmethod
+    # def angle_to_position(self, angle: float):
+    #     pass
 
     # @abc.abstractmethod
     # def getToqueLimitAddress(self):

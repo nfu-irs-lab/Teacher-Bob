@@ -29,6 +29,8 @@ VOL = 4000
 ID_OBJECT = 1
 ID_FACE = 2
 
+DEBUG = True
+
 
 class Listener(CameraListener):
 
@@ -75,14 +77,24 @@ class Listener(CameraListener):
 
 class MainProgram:
     def __init__(self):
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server.bind(("0.0.0.0", 4444))
-        self.server.listen(5)
         self.handler = PackageHandler()
-        self.monitor = CameraMonitor(0, 1)
-        self.monitor.registerDetector(ObjectDetector(ID_OBJECT, 0.5), False)
-        self.monitor.registerDetector(FaceDetector(ID_FACE), False)
-        self.robot = self.initialize_robot()
+        self.server = self.initialize_server()
+        self.monitor = self.initialize_monitor()
+
+        if not DEBUG:
+            self.robot = self.initialize_robot()
+
+    def initialize_monitor(self):
+        monitor = CameraMonitor(0, 1)
+        monitor.registerDetector(ObjectDetector(ID_OBJECT, 0.5), False)
+        monitor.registerDetector(FaceDetector(ID_FACE), False)
+        return monitor
+
+    def initialize_server(self):
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.bind(("0.0.0.0", 4444))
+        server.listen(5)
+        return server
 
     def initialize_robot(self):
         robot = Dynamixel(self.getSerialNameByDescription(bot_description), 115200)
@@ -93,9 +105,11 @@ class MainProgram:
 
     def run(self):
         self.monitor.start()
-        self.robot.open()
-        for _id in self.robot.getAllServosId():
-            print(_id,":",self.robot.ping(_id))
+
+        if not DEBUG:
+            self.robot.open()
+            for _id in self.robot.getAllServosId():
+                print(_id, ":", self.robot.ping(_id))
         while True:
             client, address = self.server.accept()
             self.monitor.setListener(Listener(self.handler, client))
@@ -116,7 +130,8 @@ class MainProgram:
             self.monitor.setDetectorEnable(ID_FACE, False)
 
     def interrupt(self):
-        self.robot.close()
+        if not DEBUG:
+            self.robot.close()
         self.monitor.stop()
         self.server.close()
 
@@ -135,7 +150,8 @@ class MainProgram:
         elif command.startswith("ROBOT_DO "):
             csv_file = command[len("ROBOT_DO "):]
             try:
-                self.doRobotAction(csv_file)
+                if not DEBUG:
+                    self.doRobotAction(csv_file)
             except Exception as e:
                 print(e.__str__())
 

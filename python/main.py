@@ -43,30 +43,37 @@ class Listener(CameraListener):
         if _id == ID_OBJECT:
             # 辨識到物品時
             for d in data:
+                # 將dict放到list中
                 l.append(d.result)
+                # 標記圖片上的辨識結果
                 annotateLabel(image, d.x, d.y, d.width, d.height, d.result['name'])
-
+            # 顯示圖片
             cv2.imshow("r", image)
+            # 將dict轉成json字串
             s = json.dumps(l)
-            print(s)
-            try:
-                self.client.send(self.handler.convertToPackage(s.encode(encoding='utf-8')))
-            except Exception as e:
-                print(e.__str__())
+            self.sendString(s)
 
         elif _id == ID_FACE:
             # 辨識到臉部時
             for d in data:
+                # 將dict放到list中
                 l.append(d.result)
+                # 標記圖片上的辨識結果
                 annotateLabel(image, d.x, d.y, d.width, d.height, d.result['emotion'])
 
+            # 顯示圖片
             cv2.imshow("r", image)
             s = json.dumps(l)
-            print(s)
-            try:
-                self.client.send(self.handler.convertToPackage(s.encode(encoding='utf-8')))
-            except Exception as e:
-                print(e.__str__())
+            self.sendString(s)
+
+    def sendString(self, string: str):
+        # 發送字串
+
+        print(string)
+        try:
+            self.client.send(self.handler.convertToPackage(string.encode(encoding='utf-8')))
+        except Exception as e:
+            print(e.__str__())
 
     def onNothingDetected(self, _id, image):
         cv2.imshow("r", image)
@@ -136,6 +143,7 @@ class MainProgram:
         self.server.close()
 
     def handleCommand(self, command: str):
+        # 處理TCP指令
         if command.startswith(CMD_OBJECT_DETECTOR):
             if command[len(CMD_OBJECT_DETECTOR):] == "ENABLE":
                 self.monitor.setDetectorEnable(ID_OBJECT, True)

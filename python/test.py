@@ -1,30 +1,30 @@
 import socket
+from threading import Thread
 
 from net.tcp_handler import PackageHandler
 
 HOST = '127.0.0.1'
 PORT = 4444
 
-if __name__ == "__main__":
+
+def receive(socket):
     while True:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((HOST, PORT))
-        handler = PackageHandler()
-        try:
-            s.send(handler.convertToPackage("OBJECT_DETECTOR DISABLE".encode('utf-8')))
-            s.send(handler.convertToPackage("FACE_DETECTOR DISABLE".encode('utf-8')))
+        data = socket.recv(4096)
+        handler.handle(data)
+        while handler.hasPackage():
+            package = handler.getPackageAndNext()
+            strs = package.decode(encoding='utf-8')
+            print("receive:", strs)
 
-            # s.send(handler.convertToPackage("FACE_DETECTOR ENABLE".encode('utf-8')))
-            s.send(handler.convertToPackage("OBJECT_DETECTOR ENABLE".encode('utf-8')))
-            while True:
-                try:
-                    handler.handle(s.recv(4096))
-                    while handler.hasPackage():
-                        package = handler.getPackageAndNext()
-                        strs = package.decode(encoding='utf-8')
-                        print("receive:", strs)
-                except Exception as e:
-                    print(e)
 
-        except Exception as e:
-            print(e.__str__())
+if __name__ == "__main__":
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((HOST, PORT))
+    handler = PackageHandler()
+    th = Thread(target=receive, args=(s,))
+    th.start()
+
+    while True:
+        text = input()
+        package = handler.convertToPackage(text.encode(encoding='utf-8'))
+        s.send(package)

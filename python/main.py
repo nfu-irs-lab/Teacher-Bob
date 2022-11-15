@@ -24,6 +24,8 @@ bot_description = ".*FT232R.*"
 CMD_OBJECT_DETECTOR = "OBJECT_DETECTOR "
 CMD_FACE_DETECTOR = "FACE_DETECTOR "
 
+VOL = 4000
+
 ID_OBJECT = 1
 ID_FACE = 2
 
@@ -36,7 +38,7 @@ class Listener(CameraListener):
 
     def onDetect(self, _id, image, data: List[DetectorData]):
         l: List = []
-        if _id == 1:
+        if _id == ID_OBJECT:
             # 辨識到物品時
             for d in data:
                 l.append(d.result)
@@ -50,7 +52,7 @@ class Listener(CameraListener):
             except Exception as e:
                 print(e.__str__())
 
-        elif _id == 2:
+        elif _id == ID_FACE:
             # 辨識到臉部時
             for d in data:
                 l.append(d.result)
@@ -78,8 +80,8 @@ class MainProgram:
         self.server.listen(5)
         self.handler = PackageHandler()
         self.monitor = CameraMonitor(0, 1)
-        self.monitor.registerDetector(ObjectDetector(1, 0.5), False)
-        self.monitor.registerDetector(FaceDetector(2), False)
+        self.monitor.registerDetector(ObjectDetector(ID_OBJECT, 0.5), False)
+        self.monitor.registerDetector(FaceDetector(ID_FACE), False)
         self.robot = self.initialize_robot()
 
     def initialize_robot(self):
@@ -92,6 +94,8 @@ class MainProgram:
     def run(self):
         self.monitor.start()
         self.robot.open()
+        for _id in self.robot.getAllServosId():
+            print(_id,":",self.robot.ping(_id))
         while True:
             client, address = self.server.accept()
             self.monitor.setListener(Listener(self.handler, client))
@@ -110,6 +114,11 @@ class MainProgram:
                 print(e.__str__())
             self.monitor.setDetectorEnable(ID_OBJECT, False)
             self.monitor.setDetectorEnable(ID_FACE, False)
+
+    def interrupt(self):
+        self.robot.close()
+        self.monitor.stop()
+        self.server.close()
 
     def handleCommand(self, command: str):
         if command.startswith(CMD_OBJECT_DETECTOR):
@@ -130,6 +139,10 @@ class MainProgram:
             except Exception as e:
                 print(e.__str__())
 
+        # elif command == "ROBOT_LEG FORWARD":
+        #     self.leg_forward()
+        # elif command == "ROBOT_LEG STOP":
+        #     self.leg_stop()
 
     def getSerialNameByDescription(self, description: str):
         for port in comports():
@@ -166,7 +179,43 @@ class MainProgram:
                         self.robot.setGoalPosition(int(servoId), int(position))
                 line = line + 1
 
+    # def leg_forward(self):
+    #     self.right_ctl(-VOL)
+    #     self.left_ctl(VOL)
+    #
+    # def leg_backward(self):
+    #     self.right_ctl(VOL)
+    #     self.left_ctl(-VOL)
+    #
+    # def leg_left(self):
+    #     self.right_ctl(-VOL)
+    #     self.left_ctl(-VOL)
+    #
+    # def leg_right(self):
+    #     self.right_ctl(VOL)
+    #     self.left_ctl(VOL)
+    #
+    # def leg_stop(self):
+    #     self.left_ctl(0)
+    #     self.right_ctl(0)
+    #
+    # def right_ctl(self, velocity: int):
+    #     self.robot.enableTorque(12, True)
+    #     self.robot.enableTorque(13, True)
+    #     self.robot.setVelocity(12, velocity)
+    #     self.robot.setVelocity(13, velocity)
+    #
+    # def left_ctl(self, velocity: int):
+    #     self.robot.enableTorque(11, True)
+    #     self.robot.enableTorque(14, True)
+    #     self.robot.setVelocity(11, velocity)
+    #     self.robot.setVelocity(14, velocity)
+
 
 if __name__ == "__main__":
     main = MainProgram()
-    main.run()
+    try:
+        main.run()
+    except KeyboardInterrupt as e:
+        print(e.__str__())
+        main.interrupt()

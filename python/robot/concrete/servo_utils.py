@@ -5,12 +5,13 @@ from robot.concrete.crt_dynamixel import PROTOCOL_1, PROTOCOL_2
 from robot.concrete.crt_servos import RX_64, MX_106, H42_20_S300_R, MX_64, RX_24F
 from robot.framework.fw_servo import DynamixelServo
 
-
+# 解析CSV宣告的馬達
 class CSVServoAgent:
     def __init__(self, csv_file: str):
         super().__init__()
         self.csv_file = csv_file
 
+    # 取得目前定義之伺服馬達
     def getDefinedServos(self) -> List[DynamixelServo]:
         with open(self.csv_file, newline='') as file:
             servoList: List[DynamixelServo] = []

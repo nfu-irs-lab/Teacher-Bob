@@ -2,7 +2,7 @@
 console.log("hello");
 let function5 = document.getElementById("function5");
 function5 === null || function5 === void 0 ? void 0 : function5.addEventListener("click", function () {
-    open("./StoryTelling.html");
+    open('http://127.0.0.1:5500/public/StoryTelling.html');
 });
 let PickkedStory = document.getElementById("story1");
 PickkedStory === null || PickkedStory === void 0 ? void 0 : PickkedStory.addEventListener("click", function () {

@@ -53,3 +53,4 @@ function getMessage(arr_card) {
 const maybeMessage = Math.random() > 0.5 ? 'Greetings' : undefined;
 getMessage(maybeMessage);
 console.log(maybeMessage);
+//# sourceMappingURL=httpServer.js.map

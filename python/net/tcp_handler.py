@@ -1,8 +1,10 @@
 from typing import List
 
+# 預設的結尾符號
 EOP = bytes([0xe2, 0x80, 0xA9])
 
 
+# 傳輸資料時所需要之通訊協定
 class PackageHandler:
     def __init__(self, EndOfLine: bytes = EOP):
         self.__EOL = EndOfLine
@@ -10,6 +12,7 @@ class PackageHandler:
         self.delay_timer = 0
         self.packages: List[bytes] = []
 
+    # 將接收到的原始位元組陣列進行解析
     def handle(self, data: bytes):
         for b in data:
             self.buffer.append(b)
@@ -19,9 +22,11 @@ class PackageHandler:
             del self.buffer[0:indexOfFirstEOL + len(self.__EOL)]
             indexOfFirstEOL = self.__getIndexOfFirstEOL(self.buffer)
 
+    # 當有封包尚未被讀取時會回傳True,反之為False
     def hasPackage(self) -> bool:
         return len(self.packages) > 0
 
+    # 取得封包,並跳至下一個封包
     def getPackageAndNext(self) -> bytes:
         if self.hasPackage():
             b = self.packages[0]
@@ -30,12 +35,14 @@ class PackageHandler:
         else:
             raise RuntimeError("No package")
 
+    # 將原始資料編碼加上EOL並回傳位元組陣列
     def convertToPackage(self, data: bytes) -> bytes:
         buffer = bytearray(len(data) + len(self.__EOL))
         buffer[0:len(data)] = data
         buffer[len(data):] = self.__EOL
         return bytes(buffer)
 
+    # 取得EOL位於字串之位置
     def __getIndexOfFirstEOL(self, data):
         for i in range(0, len(data)):
             found = 0

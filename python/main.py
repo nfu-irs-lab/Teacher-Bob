@@ -18,8 +18,6 @@ from visual.monitor.concrete.crt_camera import CameraMonitor
 from visual.monitor.framework.fw_monitor import CameraListener
 from visual.utils.visual_utils import annotateLabel
 
-EOP = bytes([0xe2, 0x80, 0xA9]).decode('utf-8')
-
 bot_description = ".*FT232R.*"
 CMD_OBJECT_DETECTOR = "OBJECT_DETECTOR "
 CMD_FACE_DETECTOR = "FACE_DETECTOR "
@@ -84,16 +82,27 @@ class Listener(CameraListener):
 
 class MainProgram:
     def __init__(self):
-        self.handler = PackageHandler()
-        self.server = self.initialize_server()
-        self.monitor = self.initialize_monitor()
 
+        # handler為封包處理器,負責解析TCP Server傳入封包以及編碼傳出封包
+        self.handler = PackageHandler()
+
+        # server 為TCP伺服器
+        self.server = self.initialize_server()
+
+        # monitor為相機監控器
+        self.monitor = self.initialize_monitor()
         if not DEBUG:
+            # robot為伺服馬達控制程式
             self.robot = self.initialize_robot()
 
     def initialize_monitor(self):
+        # CameraMonitor第一個參數為裝置編號，選定使用的攝影機
         monitor = CameraMonitor(0, 1)
-        monitor.registerDetector(ObjectDetector(ID_OBJECT, 0.5), False)
+        # conf為物品辨識機率門檻值,門檻值以下的物品不會回傳
+        conf = 0.5
+        # 註冊物品辨識器到相機監聽器,預設不會開啟
+        monitor.registerDetector(ObjectDetector(ID_OBJECT, conf), False)
+        # 註冊臉部辨識器到相機監聽器,預設不會開啟
         monitor.registerDetector(FaceDetector(ID_FACE), False)
         return monitor
 
@@ -105,15 +114,17 @@ class MainProgram:
 
     def initialize_robot(self):
         robot = Dynamixel(self.getSerialNameByDescription(bot_description), 115200)
+        # 透過agent匯入伺服馬達
         agent = CSVServoAgent("servos.csv")
         for servo in agent.getDefinedServos():
+            # 將馬達匯入至robot中
             robot.appendServo(servo)
         return robot
 
     def run(self):
         self.monitor.start()
-
         if not DEBUG:
+            # 開啟機器人
             self.robot.open()
             for _id in self.robot.getAllServosId():
                 print(_id, ":", self.robot.ping(_id))

@@ -14,7 +14,7 @@ def receive(socket):
         while handler.hasPackage():
             package = handler.getPackageAndNext()
             strs = package.decode(encoding='utf-8')
-            print("receive:", strs)
+            # print("receive:", strs)
 
 
 if __name__ == "__main__":

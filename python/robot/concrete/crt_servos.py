@@ -2,6 +2,8 @@ from robot.framework.fw_servo import DynamixelServo
 
 
 class H42_20_S300_R(DynamixelServo):
+    # document:
+    # https://emanual.robotis.com/docs/en/dxl/pro/h42-20-s300-r/
 
     def __init__(self, servoId: int, protocol: int):
         super().__init__(servoId, protocol)
@@ -23,6 +25,8 @@ class H42_20_S300_R(DynamixelServo):
 
 
 class RX_64(DynamixelServo):
+    # document:
+    # https://emanual.robotis.com/docs/en/dxl/rx/rx-64/
 
     def __init__(self, servoId: int, protocol: int):
         super().__init__(servoId, protocol)
@@ -44,6 +48,8 @@ class RX_64(DynamixelServo):
 
 
 class MX_106(DynamixelServo):
+    # document:
+    # https://emanual.robotis.com/docs/en/dxl/mx/mx-106/
 
     def __init__(self, servoId: int, protocol: int):
         super().__init__(servoId, protocol)
@@ -66,6 +72,8 @@ class MX_106(DynamixelServo):
 
 class MX_64(DynamixelServo):
 
+    # document:
+    # https://emanual.robotis.com/docs/en/dxl/mx/mx-64/
     def __init__(self, servoId: int, protocol: int):
         super().__init__(servoId, protocol)
 
@@ -86,7 +94,8 @@ class MX_64(DynamixelServo):
 
 
 class RX_24F(DynamixelServo):
-
+    # document:
+    # https://emanual.robotis.com/docs/en/dxl/rx/rx-24f/
     def __init__(self, servoId: int, protocol: int):
         super().__init__(servoId, protocol)
 

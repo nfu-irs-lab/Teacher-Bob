@@ -39,6 +39,8 @@ class Listener(CameraListener):
     def onDetect(self, _id, image, data: List[DetectorData]):
         l: List = []
         if _id == ID_OBJECT:
+            cv2.putText(image, "Object Detector", (40, 40), cv2.cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,
+                        cv2.LINE_AA)
             # 辨識到物品時
             for d in data:
                 # 將dict放到list中
@@ -52,6 +54,7 @@ class Listener(CameraListener):
             self.sendString(s)
 
         elif _id == ID_FACE:
+            cv2.putText(image, "Face Detector", (40, 40), cv2.cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
             # 辨識到臉部時
             for d in data:
                 # 將dict放到list中
@@ -77,6 +80,7 @@ class Listener(CameraListener):
         cv2.imshow("r", image)
 
     def onImageRead(self, image):
+        cv2.putText(image, "No Detector", (40, 40), cv2.cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
         cv2.imshow("r", image)
 
 

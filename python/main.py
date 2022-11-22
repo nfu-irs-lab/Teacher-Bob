@@ -8,7 +8,8 @@ from typing import List
 import cv2
 from serial.tools.list_ports_linux import comports
 
-from net.tcp_handler import PackageHandler
+from communication.concrete.crt_comm import TCPCommDevice, EOLPackageHandler
+from communication.framework.fw_comm import CommDevice
 from robot.concrete.crt_dynamixel import Dynamixel
 from robot.concrete.servo_utils import CSVServoAgent
 from visual.detector.concrete.object_detect_yolov5 import ObjectDetector
@@ -32,9 +33,8 @@ DEBUG = True
 
 class Listener(CameraListener):
 
-    def __init__(self, handler: PackageHandler, client: socket):
-        self.client = client
-        self.handler = handler
+    def __init__(self, commDevice: CommDevice):
+        self.commDevice = commDevice
 
     def onDetect(self, _id, image, data: List[DetectorData]):
         l: List = []
@@ -69,7 +69,7 @@ class Listener(CameraListener):
 
         print(string)
         try:
-            self.client.send(self.handler.convertToPackage(string.encode(encoding='utf-8')))
+            self.commDevice.write(string.encode(encoding='utf-8'))
         except Exception as e:
             print(e.__str__())
 
@@ -82,9 +82,6 @@ class Listener(CameraListener):
 
 class MainProgram:
     def __init__(self):
-
-        # handler為封包處理器,負責解析TCP Server傳入封包以及編碼傳出封包
-        self.handler = PackageHandler()
 
         # server 為TCP伺服器
         self.server = self.initialize_server()
@@ -130,22 +127,24 @@ class MainProgram:
                 print(_id, ":", self.robot.ping(_id))
         while True:
             client, address = self.server.accept()
-            self.monitor.setListener(Listener(self.handler, client))
             print("Connected:", address)
+            commDevice = TCPCommDevice(client, EOLPackageHandler())
+            self.monitor.setListener(Listener(commDevice))
             try:
                 while True:
-                    data = client.recv(4096)
-                    self.handler.handle(data)
-                    while self.handler.hasPackage():
-                        package = self.handler.getPackageAndNext()
-                        command = package.decode(encoding='utf-8')
+                    data = commDevice.read()
+                    if data is None:
+                        time.sleep(0.001)
+                        continue
+                    else:
+                        command = data.decode(encoding='utf-8')
                         print("command:", command)
                         self.handleCommand(command)
 
             except Exception as e:
                 print(e.__str__())
-            self.monitor.setDetectorEnable(ID_OBJECT, False)
-            self.monitor.setDetectorEnable(ID_FACE, False)
+                self.monitor.setDetectorEnable(ID_OBJECT, False)
+                self.monitor.setDetectorEnable(ID_FACE, False)
 
     def interrupt(self):
         if not DEBUG:

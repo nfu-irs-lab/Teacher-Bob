@@ -1,11 +1,67 @@
-from typing import List
+import socket
+from typing import Optional, List
+
+import serial
+
+from communication.framework.fw_comm import CommDevice, PackageHandler
+
+
+class SerialCommDevice(CommDevice):
+
+    def __init__(self, port_name: str, baudrate: int, handler: PackageHandler):
+        self.serial = serial.Serial(port_name, baudrate)
+        self.handler = handler
+
+    def read(self) -> Optional[bytes]:
+        self.handler.handle(self.serial.read())
+        if not self.handler.hasPackage():
+            return None
+        else:
+            return self.handler.getPackageAndNext()
+
+    def write(self, data: bytes) -> int:
+        return self.serial.write(self.handler.convertToPackage(data))
+
+    def open(self):
+        if self.isOpen():
+            self.serial.open()
+
+    def close(self):
+        self.serial.close()
+
+    def isOpen(self) -> bool:
+        return self.serial.isOpen()
+
+
+class TCPCommDevice(CommDevice):
+
+    def __init__(self, socket: socket.socket, handler: PackageHandler):
+        self.socket = socket
+        self.handler = handler
+
+    def read(self) -> Optional[bytes]:
+        self.handler.handle(self.socket.recv(4096))
+        if not self.handler.hasPackage():
+            return None
+        else:
+            return self.handler.getPackageAndNext()
+
+    def write(self, data: bytes) -> int:
+        return self.socket.send(self.handler.convertToPackage(data))
+
+    def open(self):
+        pass
+
+    def close(self):
+        self.socket.close()
+
 
 # 預設的結尾符號
 EOP = bytes([0xe2, 0x80, 0xA9])
 
 
 # 傳輸資料時所需要之通訊協定
-class PackageHandler:
+class EOLPackageHandler(PackageHandler):
     def __init__(self, EndOfLine: bytes = EOP):
         self.__EOL = EndOfLine
         self.buffer = bytearray()

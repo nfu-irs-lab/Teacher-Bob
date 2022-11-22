@@ -17,9 +17,10 @@ class CameraMonitor(VideoMonitor):
             ret, frame = self.__webcam.read()
             if not ret:
                 continue
-            if self._listener is not None:
+
+            detected = self._detect(frame)
+            if self._listener is not None and not detected:
                 self._listener.onImageRead(frame)
 
-            self._detect(frame)
             cv2.waitKey(self.__capture_delay_ms)
         self.__webcam.release()

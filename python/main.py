@@ -77,7 +77,7 @@ class Listener(CameraListener):
         cv2.imshow("r", image)
 
     def onImageRead(self, image):
-        pass
+        cv2.imshow("r", image)
 
 
 class MainProgram:

@@ -45,6 +45,7 @@ class VideoMonitor(threading.Thread):
     def setListener(self, listener: CameraListener):
         self._listener = listener
 
+    # 當辨識到結果時回傳True
     def _detect(self, image):
         for detector in self.__detectors:
             if not self._isEnable(detector.getId()):
@@ -54,9 +55,13 @@ class VideoMonitor(threading.Thread):
             if len(result) != 0:
                 if self._listener is not None:
                     self._listener.onDetect(detector.getId(), image, result)
+                    return True
             else:
                 if self._listener is not None:
                     self._listener.onNothingDetected(detector.getId(), image)
+                    return True
+
+            return False
 
     def _isEnable(self, detectorId):
         for enable_id in self.__detector_enablers:

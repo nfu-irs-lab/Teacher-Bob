@@ -42,3 +42,17 @@ class PackageHandler(abc.ABC):
     @abc.abstractmethod
     def convertToPackage(self, data: bytes) -> bytes:
         pass
+
+
+class ReConnectableDevice(abc.ABC):
+
+    @abc.abstractmethod
+    def accept(self) -> [str, str, CommDevice]:
+        # 第一個參數 位址
+        # 第二個參數 連線狀態
+        # 第三個參數 通訊介面
+        pass
+
+    @abc.abstractmethod
+    def close(self):
+        pass

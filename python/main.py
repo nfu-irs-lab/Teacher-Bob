@@ -8,8 +8,8 @@ from typing import List
 import cv2
 from serial.tools.list_ports_linux import comports
 
-from communication.concrete.crt_comm import TCPCommDevice, EOLPackageHandler
-from communication.framework.fw_comm import CommDevice
+from communication.concrete.crt_comm import TCPCommDevice, EOLPackageHandler, SerialServerDevice, TCPServerDevice
+from communication.framework.fw_comm import CommDevice, ReConnectableDevice
 from robot.concrete.crt_dynamixel import Dynamixel
 from robot.concrete.servo_utils import CSVServoAgent
 from visual.detector.concrete.object_detect_yolov5 import ObjectDetector
@@ -19,7 +19,11 @@ from visual.monitor.concrete.crt_camera import CameraMonitor
 from visual.monitor.framework.fw_monitor import CameraListener
 from visual.utils.visual_utils import annotateLabel
 
+# 藍芽HC-05模組 UART/USB轉接器晶片名稱(使用正規表達式)
+bt_description = ".*CP2102.*"
+# 機器人 UART/USB轉接器晶片名稱(使用正規表達式)
 bot_description = ".*FT232R.*"
+
 CMD_OBJECT_DETECTOR = "OBJECT_DETECTOR "
 CMD_FACE_DETECTOR = "FACE_DETECTOR "
 
@@ -86,9 +90,7 @@ class Listener(CameraListener):
 
 class MainProgram:
     def __init__(self):
-
-        # server 為TCP伺服器
-        self.server = self.initialize_server()
+        self.device = self.initialize_device()
 
         # monitor為相機監控器
         self.monitor = self.initialize_monitor()
@@ -107,11 +109,15 @@ class MainProgram:
         monitor.registerDetector(FaceDetector(ID_FACE), False)
         return monitor
 
-    def initialize_server(self):
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind(("0.0.0.0", 4444))
-        server.listen(5)
-        return server
+    def initialize_device(self) -> ReConnectableDevice:
+        # 使用TCP傳輸
+        return TCPServerDevice("0.0.0.0", 4444, EOLPackageHandler())
+
+        # 使用藍芽傳輸
+        # return BluetoothServerDevice(EOLPackageHandler())
+
+        # Using HC-05
+        # return SerialServerDevice(getSerialNameByDescription(bt_description), 38400, EOLPackageHandler())
 
     def initialize_robot(self):
         robot = Dynamixel(self.getSerialNameByDescription(bot_description), 115200)
@@ -129,12 +135,12 @@ class MainProgram:
             self.robot.open()
             for _id in self.robot.getAllServosId():
                 print(_id, ":", self.robot.ping(_id))
+        print("Communication Device is ready")
         while True:
-            client, address = self.server.accept()
-            print("Connected:", address)
-            commDevice = TCPCommDevice(client, EOLPackageHandler())
-            self.monitor.setListener(Listener(commDevice))
+            address, status, commDevice = self.device.accept()
+            print(address, "is", status)
             try:
+                self.monitor.setListener(Listener(commDevice))
                 while True:
                     data = commDevice.read()
                     if data is None:
@@ -142,8 +148,7 @@ class MainProgram:
                         continue
                     else:
                         command = data.decode(encoding='utf-8')
-                        print("command:", command)
-                        self.handleCommand(command)
+                        self.handleCommand(command, commDevice)
 
             except Exception as e:
                 print(e.__str__())
@@ -154,9 +159,8 @@ class MainProgram:
         if not DEBUG:
             self.robot.close()
         self.monitor.stop()
-        self.server.close()
 
-    def handleCommand(self, command: str):
+    def handleCommand(self, command: str, commDevice: CommDevice):
         # 處理TCP指令
         if command.startswith(CMD_OBJECT_DETECTOR):
             if command[len(CMD_OBJECT_DETECTOR):] == "ENABLE":

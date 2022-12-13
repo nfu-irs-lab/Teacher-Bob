@@ -8,7 +8,8 @@ from typing import List
 import cv2
 from serial.tools.list_ports_linux import comports
 
-from net.tcp_handler import PackageHandler
+from communication.concrete.crt_comm import TCPCommDevice, EOLPackageHandler, SerialServerDevice, TCPServerDevice
+from communication.framework.fw_comm import CommDevice, ReConnectableDevice
 from robot.concrete.crt_dynamixel import Dynamixel
 from robot.concrete.servo_utils import CSVServoAgent
 from visual.detector.concrete.object_detect_yolov5 import ObjectDetector
@@ -18,7 +19,11 @@ from visual.monitor.concrete.crt_camera import CameraMonitor
 from visual.monitor.framework.fw_monitor import CameraListener
 from visual.utils.visual_utils import annotateLabel
 
+# 藍芽HC-05模組 UART/USB轉接器晶片名稱(使用正規表達式)
+bt_description = ".*CP2102.*"
+# 機器人 UART/USB轉接器晶片名稱(使用正規表達式)
 bot_description = ".*FT232R.*"
+
 CMD_OBJECT_DETECTOR = "OBJECT_DETECTOR "
 CMD_FACE_DETECTOR = "FACE_DETECTOR "
 
@@ -32,13 +37,14 @@ DEBUG = True
 
 class Listener(CameraListener):
 
-    def __init__(self, handler: PackageHandler, client: socket):
-        self.client = client
-        self.handler = handler
+    def __init__(self, commDevice: CommDevice):
+        self.commDevice = commDevice
 
     def onDetect(self, _id, image, data: List[DetectorData]):
         l: List = []
         if _id == ID_OBJECT:
+            cv2.putText(image, "Object Detector", (40, 40), cv2.cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,
+                        cv2.LINE_AA)
             # 辨識到物品時
             for d in data:
                 # 將dict放到list中
@@ -52,6 +58,7 @@ class Listener(CameraListener):
             self.sendString(s)
 
         elif _id == ID_FACE:
+            cv2.putText(image, "Face Detector", (40, 40), cv2.cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
             # 辨識到臉部時
             for d in data:
                 # 將dict放到list中
@@ -69,7 +76,7 @@ class Listener(CameraListener):
 
         print(string)
         try:
-            self.client.send(self.handler.convertToPackage(string.encode(encoding='utf-8')))
+            self.commDevice.write(string.encode(encoding='utf-8'))
         except Exception as e:
             print(e.__str__())
 
@@ -77,17 +84,13 @@ class Listener(CameraListener):
         cv2.imshow("r", image)
 
     def onImageRead(self, image):
-        pass
+        cv2.putText(image, "No Detector", (40, 40), cv2.cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        cv2.imshow("r", image)
 
 
 class MainProgram:
     def __init__(self):
-
-        # handler為封包處理器,負責解析TCP Server傳入封包以及編碼傳出封包
-        self.handler = PackageHandler()
-
-        # server 為TCP伺服器
-        self.server = self.initialize_server()
+        self.device = self.initialize_device()
 
         # monitor為相機監控器
         self.monitor = self.initialize_monitor()
@@ -106,11 +109,15 @@ class MainProgram:
         monitor.registerDetector(FaceDetector(ID_FACE), False)
         return monitor
 
-    def initialize_server(self):
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind(("0.0.0.0", 4444))
-        server.listen(5)
-        return server
+    def initialize_device(self) -> ReConnectableDevice:
+        # 使用TCP傳輸
+        return TCPServerDevice("0.0.0.0", 4444, EOLPackageHandler())
+
+        # 使用藍芽傳輸
+        # return BluetoothServerDevice(EOLPackageHandler())
+
+        # Using HC-05
+        # return SerialServerDevice(getSerialNameByDescription(bt_description), 38400, EOLPackageHandler())
 
     def initialize_robot(self):
         robot = Dynamixel(self.getSerialNameByDescription(bot_description), 115200)
@@ -128,32 +135,32 @@ class MainProgram:
             self.robot.open()
             for _id in self.robot.getAllServosId():
                 print(_id, ":", self.robot.ping(_id))
+        print("Communication Device is ready")
         while True:
-            client, address = self.server.accept()
-            self.monitor.setListener(Listener(self.handler, client))
-            print("Connected:", address)
+            address, status, commDevice = self.device.accept()
+            print(address, "is", status)
             try:
+                self.monitor.setListener(Listener(commDevice))
                 while True:
-                    data = client.recv(4096)
-                    self.handler.handle(data)
-                    while self.handler.hasPackage():
-                        package = self.handler.getPackageAndNext()
-                        command = package.decode(encoding='utf-8')
-                        print("command:", command)
-                        self.handleCommand(command)
+                    data = commDevice.read()
+                    if data is None:
+                        time.sleep(0.001)
+                        continue
+                    else:
+                        command = data.decode(encoding='utf-8')
+                        self.handleCommand(command, commDevice)
 
             except Exception as e:
                 print(e.__str__())
-            self.monitor.setDetectorEnable(ID_OBJECT, False)
-            self.monitor.setDetectorEnable(ID_FACE, False)
+                self.monitor.setDetectorEnable(ID_OBJECT, False)
+                self.monitor.setDetectorEnable(ID_FACE, False)
 
     def interrupt(self):
         if not DEBUG:
             self.robot.close()
         self.monitor.stop()
-        self.server.close()
 
-    def handleCommand(self, command: str):
+    def handleCommand(self, command: str, commDevice: CommDevice):
         # 處理TCP指令
         if command.startswith(CMD_OBJECT_DETECTOR):
             if command[len(CMD_OBJECT_DETECTOR):] == "ENABLE":

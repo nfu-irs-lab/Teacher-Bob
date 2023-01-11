@@ -3,30 +3,26 @@ function GoStorySelectPage() {
 }
 let StoryNum: number;
 let PageCount: number = 0;
-let EngSubState: boolean = false;
+
 //透過fetch在後台服務器獲取數據，透過第一個then將原始數據轉換成.json格式
 const GetDataFromJson = fetch(
   "http://127.0.0.1:5500/public/resourse/story.json"
 ).then((response) => response.json());
 
-function PromiseToString(promise: Promise<any>): String {
-  let tem = JSON.stringify(promise);
-  let result = JSON.parse(tem);
-  return result;
-}
-
-function GetInputStoryNum(): number {
+function GetInputStory(): number {
   const InputStory = document.getElementById(
     "Storylist"
   ) as HTMLInputElement | null;
   StoryNum = Number(InputStory?.value.slice(5));
   console.log("story" + StoryNum);
-  return StoryNum;
+  return StoryNum - 1;
 }
 function InitializePage() {
-  document.getElementById("FirstPage")?.setAttribute("style", "display:none");
-  document.getElementById("SecondPage")?.setAttribute("style", "display:block");
+  document.getElementById("SelectPage")?.setAttribute("style", "display:none");
+  document.getElementById("WorkPage")?.setAttribute("style", "display:block");
 }
+
+let EngSubState: boolean = false;
 function ChangeState() {
   if (EngSubState == false) {
     document
@@ -40,17 +36,85 @@ function ChangeState() {
     EngSubState = false;
   }
 }
-let btn1 = document.getElementById("EnglishSubtitle");
-if (btn1 != null) btn1.onclick = ChangeState;
-let CheckStoryNum = () => {
-  GetDataFromJson.then(function (json) {
-    for (let i = 0; i < json.length; i++) {
-      if (json[i].id == `story${i + 1}`) {
-        return i;
-      }
-    }
-  });
-};
+
+function ShowEnglishSubtitle() {
+  document
+    .getElementById("ShowEnglishButton")
+    ?.addEventListener("click", function () {
+      let number = GetInputStory();
+      GetDataFromJson.then(function (json) {
+        let StringfyJsonWord = JSON.stringify(json[number].englishsubtitle);
+        let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
+        let Target = document.getElementById("EnglishSubtitleLabel");
+        Target!.innerHTML = ParseJsonWord;
+      });
+    });
+}
+
+function ShowChineseSubtitle() {
+  document
+    .getElementById("ShowChineseButton")
+    ?.addEventListener("click", function () {
+      let number = GetInputStory();
+      GetDataFromJson.then(function (json) {
+        let StringfyJsonWord = JSON.stringify(json[number].chinesesubtitle);
+        let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
+        let Target = document.getElementById("ChineseSubtitleLabel");
+        Target!.innerHTML = ParseJsonWord;
+      });
+    });
+}
+GetDataFromJson.then((json) => console.log(json[0].data.pages[3].text));
+let PageNumber: number = 0;
+function NestLine() {
+  document
+    .getElementById("NextPageButton")
+    ?.addEventListener("click", function () {
+      let number = GetInputStory();
+      GetDataFromJson.then(function (json) {
+        let StringfyJsonWord = JSON.stringify(
+          json[number].data.pages[PageNumber].text
+        );
+        let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
+        let Target = document.getElementById("EnglishSubtitle");
+        Target!.innerHTML = ParseJsonWord;
+        PageNumber++;
+        console.log(1);
+      });
+    });
+}
+
+function LastLine() {
+  document
+    .getElementById("LastPageButton")
+    ?.addEventListener("click", function () {
+      let number = GetInputStory();
+      GetDataFromJson.then(function (json) {
+        let StringfyJsonWord = JSON.stringify(
+          json[number].data.pages[PageNumber].text
+        );
+        let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
+        let Target = document.getElementById("EnglishSubtitle");
+        Target!.innerHTML = ParseJsonWord;
+        PageNumber--;
+        console.log(2);
+      });
+    });
+}
+// (json) => (nnn = JSON.parse(JSON.stringify(json[0].chinesesubtitle)));
+// console.log(nnn);
+//json[0].chinesesubtitle
+
+// if (btn1 != null) btn1.onclick = ChangeState;
+// let CheckStoryNum = () => {
+//   GetDataFromJson.then(function (json) {
+//     for (let i = 0; i < json.length; i++) {
+//       if (json[i].id == `story${i + 1}`) {
+//         return i;
+//       }
+//     }
+//   });
+// };
 // async function GetStoryNumber() {
 //   let storynum = await GetDataFromJson;
 // }

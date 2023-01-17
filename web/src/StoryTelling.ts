@@ -51,21 +51,6 @@ function ShowEnglishSubtitle() {
     });
 }
 
-function ShowChineseSubtitle() {
-  document
-    .getElementById("ShowChineseButton")
-    ?.addEventListener("click", function () {
-      let number = GetInputStory();
-      GetDataFromJson.then(function (json) {
-        let StringfyJsonWord = JSON.stringify(json[number].chinesesubtitle);
-        let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
-        let Target = document.getElementById("ChineseSubtitleLabel");
-        Target!.innerHTML = ParseJsonWord;
-      });
-    });
-}
-GetDataFromJson.then((json) => console.log(json[0].data.pages[3].text));
-let PageNumber: number = 0;
 function NestLine() {
   document
     .getElementById("NextPageButton")

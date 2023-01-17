@@ -6,15 +6,8 @@ const GetDataFromJson = fetch(
 document
   .getElementById("function5")
   ?.addEventListener("click", GoStorySelectPage);
-document
-  .getElementById("function5")
-  ?.addEventListener("click", LoadAllStoryFromJson);
 function GoStorySelectPage() {
   open("http://127.0.0.1:5500/public/StorySelectPage.html");
-}
-
-function LoadAllStoryFromJson() {
-  console.log(123);
 }
 
 //自動從json裡面獲取所有的故事，並加載進故事選擇的下拉式清單

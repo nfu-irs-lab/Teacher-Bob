@@ -1,16 +1,11 @@
 "use strict";
-var _a, _b;
+var _a;
 //透過fetch在後台服務器獲取數據，透過第一個then將原始數據轉換成.json格式
 const GetDataFromJson = fetch("http://127.0.0.1:5500/public/resourse/story.json").then((response) => response.json());
 (_a = document
     .getElementById("function5")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", GoStorySelectPage);
-(_b = document
-    .getElementById("function5")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", LoadAllStoryFromJson);
 function GoStorySelectPage() {
     open("http://127.0.0.1:5500/public/StorySelectPage.html");
-}
-function LoadAllStoryFromJson() {
-    console.log(123);
 }
 //自動從json裡面獲取所有的故事，並加載進故事選擇的下拉式清單
 GetDataFromJson.then(function (json) {

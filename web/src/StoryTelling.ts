@@ -1,13 +1,36 @@
-function GoStorySelectPage() {
-  open("http://127.0.0.1:5500/public/StorySelectPage.html");
-}
-let StoryNum: number;
-let PageCount: number = 0;
-
 //透過fetch在後台服務器獲取數據，透過第一個then將原始數據轉換成.json格式
 const GetDataFromJson = fetch(
   "http://127.0.0.1:5500/public/resourse/story.json"
 ).then((response) => response.json());
+
+document
+  .getElementById("function5")
+  ?.addEventListener("click", GoStorySelectPage);
+document
+  .getElementById("function5")
+  ?.addEventListener("click", LoadAllStoryFromJson);
+function GoStorySelectPage() {
+  open("http://127.0.0.1:5500/public/StorySelectPage.html");
+}
+
+function LoadAllStoryFromJson() {
+  console.log(123);
+}
+
+//自動從json裡面獲取所有的故事，並加載進故事選擇的下拉式清單
+GetDataFromJson.then(function (json) {
+  let TotalAmountOfStory = json.length;
+  for (let i = 0; i < TotalAmountOfStory; i++) {
+    let Storylist = document.getElementById("Storylist");
+    let StoryNameFromJson = document.createElement("option");
+    StoryNameFromJson.setAttribute("value", "story" + (i + 1));
+    StoryNameFromJson.textContent = json[i].chinesesubtitle;
+    Storylist!.appendChild(StoryNameFromJson);
+  }
+});
+
+let StoryNum: number;
+let PageCount: number = 0;
 
 function GetInputStory(): number {
   const InputStory = document.getElementById(
@@ -131,16 +154,3 @@ function Play() {
   msg.voice = voices[LanguageNumber];
   window.speechSynthesis.speak(msg);
 }
-
-// var voices = window.speechSynthesis.getVoices();
-//     // 開啟英文字幕
-//     const OpenEnglishSubtitle = document.getElementById("EnglishSubtitle");
-//     OpenEnglishSubtitle?.setAttribute("style", "display:block");
-//     if (OpenEnglishSubtitle != null) OpenEnglishSubtitle.innerHTML = "123";
-//     // 開啟中文字幕
-//     const OpenChineseButton = document.getElementById("ChineseSubtitle");
-//     OpenChineseButton?.setAttribute("style", "display:block");
-//     if (OpenChineseButton != null) OpenChineseButton.innerHTML = "456";
-
-//     // open("./StoryLib/story1.txt");
-//   });

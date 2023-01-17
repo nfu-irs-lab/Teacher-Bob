@@ -11,6 +11,7 @@
     <div id="SelectPage" style="display: block">
       <label id="Choose" for="Story">Choose a story:</label>
       <select id="Storylist">
+        <option value="" disabled>請選擇故事</option>
         <option value="story1">年獸的故事</option>
         <option value="story2">三隻小豬</option>
         <option value="story3">小紅帽</option>
@@ -33,17 +34,14 @@
       <h2 id="EnglishSubtitle" style="display: none"></h2>
       <h2 id="ChineseSubtitle" style="display: none"></h2>
 
-      <button id="NextPageButton" onclick="NestLine()" style="display: block">
-        下一句
-      </button>
+      <button id="NextPageButton" style="display: block">下一句</button>
 
-      <button id="LastPageButton" onclick="LastLine()" style="display: block">
-        上一句
-      </button>
+      <button id="LastPageButton" style="display: block">上一句</button>
 
-      <button id="PlayButton" onclick="Play()" style="display: block">
-        播放
-      </button>
+      <button id="PlayButton" style="display: block">播放</button>
+      <select id="LanguageSelect">
+        <option value="" disabled>請選擇語言</option>
+      </select>
     </div>
 
     <script type="text/Javascript" src="./StoryTelling.js"></script>

@@ -14,9 +14,9 @@ function GetInputStory(): number {
     "Storylist"
   ) as HTMLInputElement | null;
   StoryNum = Number(InputStory?.value.slice(5));
-  console.log("story" + StoryNum);
   return StoryNum - 1;
 }
+
 function InitializePage() {
   document.getElementById("SelectPage")?.setAttribute("style", "display:none");
   document.getElementById("WorkPage")?.setAttribute("style", "display:block");
@@ -36,79 +36,95 @@ function ChangeState() {
     EngSubState = false;
   }
 }
+function StringfyJson(JsonWords: string): string {
+  let StringfyJsonWord = JSON.stringify(JsonWords);
+  let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
+  return ParseJsonWord;
+}
 
+let PageNumber: number = 0;
 function ShowEnglishSubtitle() {
-  document
-    .getElementById("ShowEnglishButton")
-    ?.addEventListener("click", function () {
+  let EnglishSubtitleShow = document.getElementById("EnglishSubtitle");
+  if (EnglishSubtitleShow?.style.display == "none") {
+    EnglishSubtitleShow.setAttribute("style", "display:block");
+    let Showbutton = document.getElementById("ShowEnglishButton");
+    Showbutton?.addEventListener("click", function () {
       let number = GetInputStory();
       GetDataFromJson.then(function (json) {
-        let StringfyJsonWord = JSON.stringify(json[number].englishsubtitle);
-        let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
-        let Target = document.getElementById("EnglishSubtitleLabel");
-        Target!.innerHTML = ParseJsonWord;
+        StringfyJson(json[number].data.pages[PageNumber].text);
+        let Target = document.getElementById("EnglishSubtitle");
+        Target!.innerHTML = StringfyJson(
+          json[number].data.pages[PageNumber].text
+        );
       });
     });
+  } else {
+    EnglishSubtitleShow?.setAttribute("style", "display:none");
+  }
 }
 
 function NestLine() {
+  PageNumber++;
   document
     .getElementById("NextPageButton")
     ?.addEventListener("click", function () {
       let number = GetInputStory();
       GetDataFromJson.then(function (json) {
-        let StringfyJsonWord = JSON.stringify(
-          json[number].data.pages[PageNumber].text
-        );
-        let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
         let Target = document.getElementById("EnglishSubtitle");
-        Target!.innerHTML = ParseJsonWord;
-        PageNumber++;
-        console.log(1);
+        if (PageNumber < json[number].data.pages.length) {
+          Target!.innerHTML = StringfyJson(
+            json[number].data.pages[PageNumber].text
+          );
+          console.log(PageNumber);
+        } else {
+          PageNumber = json[number].data.pages.length - 1;
+          Target!.innerHTML = StringfyJson(
+            json[number].data.pages[PageNumber].text
+          );
+        }
       });
     });
 }
 
 function LastLine() {
+  PageNumber--;
   document
     .getElementById("LastPageButton")
     ?.addEventListener("click", function () {
       let number = GetInputStory();
       GetDataFromJson.then(function (json) {
-        let StringfyJsonWord = JSON.stringify(
-          json[number].data.pages[PageNumber].text
-        );
-        let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
-        let Target = document.getElementById("EnglishSubtitle");
-        Target!.innerHTML = ParseJsonWord;
-        PageNumber--;
-        console.log(2);
+        if (PageNumber < 0) {
+          PageNumber = 0;
+          let Target = document.getElementById("EnglishSubtitle");
+          Target!.innerHTML = StringfyJson(
+            json[number].data.pages[PageNumber].text
+          );
+        } else {
+          let Target = document.getElementById("EnglishSubtitle");
+          Target!.innerHTML = StringfyJson(
+            json[number].data.pages[PageNumber].text
+          );
+          console.log(PageNumber);
+        }
       });
     });
 }
-// (json) => (nnn = JSON.parse(JSON.stringify(json[0].chinesesubtitle)));
-// console.log(nnn);
-//json[0].chinesesubtitle
-
-// if (btn1 != null) btn1.onclick = ChangeState;
-// let CheckStoryNum = () => {
-//   GetDataFromJson.then(function (json) {
-//     for (let i = 0; i < json.length; i++) {
-//       if (json[i].id == `story${i + 1}`) {
-//         return i;
-//       }
-//     }
-//   });
-// };
-// async function GetStoryNumber() {
-//   let storynum = await GetDataFromJson;
-// }
-// document.getElementById(InputStory?.value as string)?.addEventListener("click", () => {
-//     console.log(InputStory?.value);
-//     // 關閉故事選擇介面
-//     let StoryList = document.getElementById("storylist");
-//     StoryList?.setAttribute("style", "display:none");
-
+function Play() {
+  let Target = document.getElementById("EnglishSubtitle")?.innerHTML;
+  var msg = new SpeechSynthesisUtterance(Target);
+  msg.rate = 0.7;
+  speechSynthesis.addEventListener("voiceschanged", function () {
+    var voices = window.speechSynthesis.getVoices();
+    console.log(voices);
+    var ChoosenVoice = voices.find(
+      (voice) => voice.voiceURI === "Google 國語（臺灣）"
+    );
+    console.log(1);
+    msg.voice = voices[5];
+    speechSynthesis.speak(msg);
+  });
+}
+// var voices = window.speechSynthesis.getVoices();
 //     // 開啟英文字幕
 //     const OpenEnglishSubtitle = document.getElementById("EnglishSubtitle");
 //     OpenEnglishSubtitle?.setAttribute("style", "display:block");
@@ -120,9 +136,3 @@ function LastLine() {
 
 //     // open("./StoryLib/story1.txt");
 //   });
-
-document.getElementById("text")?.addEventListener("click", () => {});
-const synth = window.speechSynthesis;
-const utter = new SpeechSynthesisUtterance();
-utter.text = document.getElementById("function5")?.innerText as string;
-const speak = () => synth.speak(utter);

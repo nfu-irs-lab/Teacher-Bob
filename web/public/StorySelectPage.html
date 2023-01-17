@@ -19,6 +19,9 @@
     </div>
 
     <div id="WorkPage" style="display: none">
+      <h3 id="EnglishSubtitleLabel" style="display: block"></h3>
+      <h3 id="ChineseSubtitleLabel" style="display: block"></h3>
+
       <button
         id="ShowEnglishButton"
         onclick="ShowEnglishSubtitle()"
@@ -27,25 +30,20 @@
         顯示英文字幕
       </button>
 
-      <button
-        id="ShowChineseButton"
-        onclick="ShowChineseSubtitle()"
-        style="display: block"
-      >
-        顯示中文字幕
-      </button>
-
-      <h3 id="EnglishSubtitleLabel" style="display: block"></h3>
-      <h3 id="ChineseSubtitleLabel" style="display: block"></h3>
+      <h2 id="EnglishSubtitle" style="display: none"></h2>
+      <h2 id="ChineseSubtitle" style="display: none"></h2>
 
       <button id="NextPageButton" onclick="NestLine()" style="display: block">
         下一句
       </button>
+
       <button id="LastPageButton" onclick="LastLine()" style="display: block">
         上一句
       </button>
-      <h2 id="EnglishSubtitle" style="display: block"></h2>
-      <h2 id="ChineseSubtitle" style="display: block"></h2>
+
+      <button id="PlayButton" onclick="Play()" style="display: block">
+        播放
+      </button>
     </div>
 
     <script type="text/Javascript" src="./StoryTelling.js"></script>

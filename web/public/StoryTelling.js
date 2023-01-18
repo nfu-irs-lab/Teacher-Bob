@@ -56,20 +56,6 @@ function InitializeWorkPage() {
         }
     });
 }
-function ChangeState() {
-    var _a, _b;
-    let EngSubState = false;
-    if (EngSubState == false) {
-        (_a = document
-            .getElementById("EnglishSubtitle")) === null || _a === void 0 ? void 0 : _a.setAttribute("style", "display:block");
-        EngSubState = true;
-    }
-    else {
-        (_b = document
-            .getElementById("EnglishSubtitle")) === null || _b === void 0 ? void 0 : _b.setAttribute("style", "display:none");
-        EngSubState = false;
-    }
-}
 document.getElementById("ShowEnglishButton").onclick = ShowEnglishSubtitle;
 function ShowEnglishSubtitle() {
     let EngSubtitle = document.getElementById("EnglishSubtitle");
@@ -130,5 +116,20 @@ function Play() {
     var voices = window.speechSynthesis.getVoices();
     msg.voice = voices[GetChoosenVoicesFromUser()];
     window.speechSynthesis.speak(msg);
+}
+document.getElementById("AutoPlayButton").onclick = AutoPlay;
+function AutoPlay() {
+    let InputStoryNumber = GetInputStoryNumber();
+    GetDataFromJson.then(function (json) {
+        let Storylength = json[InputStoryNumber].data.pages.length;
+        for (CurrentPageNumber; CurrentPageNumber < Storylength; CurrentPageNumber++) {
+            let ReadTarget = StringfyJson(json[InputStoryNumber].data.pages[CurrentPageNumber].text);
+            let msg = new SpeechSynthesisUtterance(ReadTarget);
+            msg.rate = GetSpeedRateFromUser();
+            var voices = window.speechSynthesis.getVoices();
+            msg.voice = voices[GetChoosenVoicesFromUser()];
+            window.speechSynthesis.speak(msg);
+        }
+    });
 }
 //# sourceMappingURL=StoryTelling.js.map

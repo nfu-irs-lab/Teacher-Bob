@@ -139,12 +139,15 @@ function StopPlay() {
 document.getElementById("PauseButton").onclick = Pause;
 let SpeakingState = true;
 function Pause() {
+    let PauseButton = document.getElementById("PauseButton");
     if (SpeakingState == true) {
         speechSynthesis.pause();
+        PauseButton.textContent = "繼續播放";
         SpeakingState = false;
     }
     else {
         speechSynthesis.resume();
+        PauseButton.textContent = "暫停播放";
         SpeakingState = true;
     }
 }

@@ -122,8 +122,8 @@ function AutoPlay() {
     let InputStoryNumber = GetInputStoryNumber();
     GetDataFromJson.then(function (json) {
         let Storylength = json[InputStoryNumber].data.pages.length;
-        for (CurrentPageNumber; CurrentPageNumber < Storylength; CurrentPageNumber++) {
-            let ReadTarget = StringfyJson(json[InputStoryNumber].data.pages[CurrentPageNumber].text);
+        for (let i = 0; i < Storylength; i++) {
+            let ReadTarget = StringfyJson(json[InputStoryNumber].data.pages[i].text);
             let msg = new SpeechSynthesisUtterance(ReadTarget);
             msg.rate = GetSpeedRateFromUser();
             var voices = window.speechSynthesis.getVoices();
@@ -131,5 +131,21 @@ function AutoPlay() {
             window.speechSynthesis.speak(msg);
         }
     });
+}
+document.getElementById("StopButton").onclick = StopPlay;
+function StopPlay() {
+    speechSynthesis.cancel();
+}
+document.getElementById("PauseButton").onclick = Pause;
+let SpeakingState = true;
+function Pause() {
+    if (SpeakingState == true) {
+        speechSynthesis.pause();
+        SpeakingState = false;
+    }
+    else {
+        speechSynthesis.resume();
+        SpeakingState = true;
+    }
 }
 //# sourceMappingURL=StoryTelling.js.map

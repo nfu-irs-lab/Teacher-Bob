@@ -1,3 +1,19 @@
+function StringfyJson(JsonWords: string): string {
+  let StringfyJsonWord = JSON.stringify(JsonWords);
+  let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
+  return ParseJsonWord;
+}
+
+function ShowCurrentPageEnglishSubtitle(CurrentPageNumber: number) {
+  GetDataFromJson.then(function (json) {
+    let InputStoryNumber = GetInputStoryNumber();
+    let Target = document.getElementById("EnglishSubtitle");
+    let CurrentPageEngSubtitle =
+      json[InputStoryNumber].data.pages[CurrentPageNumber].text;
+    Target!.innerHTML = StringfyJson(CurrentPageEngSubtitle);
+  });
+}
+
 //透過fetch在後台服務器獲取數據，透過第一個then將原始數據轉換成.json格式
 const GetDataFromJson = fetch(
   "http://127.0.0.1:5500/public/resourse/story.json"
@@ -25,7 +41,7 @@ GetDataFromJson.then(function (json) {
 let StoryNum: number;
 let PageCount: number = 0;
 
-function GetInputStory(): number {
+function GetInputStoryNumber(): number {
   const InputStory = document.getElementById(
     "Storylist"
   ) as HTMLInputElement | null;
@@ -33,7 +49,7 @@ function GetInputStory(): number {
   return StoryNum - 1;
 }
 
-function InitializePage() {
+function InitializeWorkPage() {
   //將第一層頁面隱藏，顯示第二層頁面
   document.getElementById("SelectPage")?.setAttribute("style", "display:none");
   document.getElementById("WorkPage")?.setAttribute("style", "display:block");
@@ -52,8 +68,8 @@ function InitializePage() {
   });
 }
 
-let EngSubState: boolean = false;
 function ChangeState() {
+  let EngSubState: boolean = false;
   if (EngSubState == false) {
     document
       .getElementById("EnglishSubtitle")
@@ -66,84 +82,71 @@ function ChangeState() {
     EngSubState = false;
   }
 }
-function StringfyJson(JsonWords: string): string {
-  let StringfyJsonWord = JSON.stringify(JsonWords);
-  let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
-  return ParseJsonWord;
-}
 
-let CurrentPageNumber: number = 0;
+document.getElementById("ShowEnglishButton")!.onclick = ShowEnglishSubtitle;
 function ShowEnglishSubtitle() {
-  let EnglishSubtitleShow = document.getElementById("EnglishSubtitle");
-  if (EnglishSubtitleShow?.style.display == "none") {
-    EnglishSubtitleShow.setAttribute("style", "display:block");
-    let Showbutton = document.getElementById("ShowEnglishButton");
-    Showbutton?.addEventListener("click", function () {
-      let number = GetInputStory();
-      GetDataFromJson.then(function (json) {
-        StringfyJson(json[number].data.pages[CurrentPageNumber].text);
-        let Target = document.getElementById("EnglishSubtitle");
-        Target!.innerHTML = StringfyJson(
-          json[number].data.pages[CurrentPageNumber].text
-        );
-      });
+  let EngSubtitle = document.getElementById("EnglishSubtitle");
+  let InputStoryNumber = GetInputStoryNumber();
+  let Target = document.getElementById("EnglishSubtitle");
+  if (EngSubtitle?.style.display == "none" || EngSubtitle?.innerHTML == null) {
+    EngSubtitle!.setAttribute("style", "display:block");
+    GetDataFromJson.then(function (json) {
+      let CurrentPageEngSubtitle =
+        json[InputStoryNumber].data.pages[CurrentPageNumber].text;
+      Target!.innerHTML = StringfyJson(CurrentPageEngSubtitle);
+      console.log(CurrentPageNumber);
     });
   } else {
-    EnglishSubtitleShow?.setAttribute("style", "display:none");
+    EngSubtitle?.setAttribute("style", "display:none");
   }
 }
 
+let CurrentPageNumber: number = 0;
 document.getElementById("NextPageButton")!.onclick = NestLine;
 function NestLine() {
-  let InputStoryNumber = GetInputStory();
+  let InputStoryNumber = GetInputStoryNumber();
   GetDataFromJson.then(function (json) {
-    let Target = document.getElementById("EnglishSubtitle");
     let Storylength = json[InputStoryNumber].data.pages.length;
-    if (CurrentPageNumber >= Storylength - 1) {
-      CurrentPageNumber = Storylength - 1;
-      Target!.innerHTML = StringfyJson(
-        json[InputStoryNumber].data.pages[CurrentPageNumber].text
-      );
-      console.log(CurrentPageNumber);
-    } else {
-      CurrentPageNumber++;
-      Target!.innerHTML = StringfyJson(
-        json[InputStoryNumber].data.pages[CurrentPageNumber].text
-      );
-    }
+    //判斷邊界
+    if (CurrentPageNumber >= Storylength - 1)
+      ShowCurrentPageEnglishSubtitle(CurrentPageNumber);
+    else ShowCurrentPageEnglishSubtitle(CurrentPageNumber++);
   });
 }
 
 document.getElementById("LastPageButton")!.onclick = LastLine;
 function LastLine() {
-  let InputStoryNumber = GetInputStory();
-  GetDataFromJson.then(function (json) {
-    let Target = document.getElementById("EnglishSubtitle");
-    if (CurrentPageNumber <= 0) {
-      CurrentPageNumber = 0;
-      Target!.innerHTML = StringfyJson(
-        json[InputStoryNumber].data.pages[CurrentPageNumber].text
-      );
-      console.log(CurrentPageNumber);
-    } else {
-      CurrentPageNumber--;
-      Target!.innerHTML = StringfyJson(
-        json[InputStoryNumber].data.pages[CurrentPageNumber].text
-      );
-    }
+  //判斷邊界
+  GetDataFromJson.then(function () {
+    if (CurrentPageNumber <= 0)
+      ShowCurrentPageEnglishSubtitle(CurrentPageNumber);
+    else ShowCurrentPageEnglishSubtitle(CurrentPageNumber--);
   });
+}
+
+function GetSpeedRateFromUser(): number {
+  let SpeakRate = document.getElementById(
+    "LanguageSpeed"
+  ) as HTMLInputElement | null;
+  let UserChoosenRate = Number(SpeakRate?.value);
+  return UserChoosenRate;
+}
+
+function GetChoosenVoicesFromUser(): number {
+  let VoiceChoose = document.getElementById(
+    "LanguageSelect"
+  ) as HTMLInputElement | null;
+  let LanguageNumber = Number(VoiceChoose?.value);
+  return LanguageNumber;
 }
 
 document.getElementById("PlayButton")!.onclick = Play;
 function Play() {
   let ReadTarget = document.getElementById("EnglishSubtitle")?.innerText;
   var msg = new SpeechSynthesisUtterance(ReadTarget);
-  msg.rate = 1;
-  let VoiceChoose = document.getElementById(
-    "LanguageSelect"
-  ) as HTMLInputElement | null;
-  let LanguageNumber = Number(VoiceChoose?.value);
+  msg.rate = GetSpeedRateFromUser();
+  //從開啟的瀏覽器中獲取該瀏覽器支援的voice API
   var voices = window.speechSynthesis.getVoices();
-  msg.voice = voices[LanguageNumber];
+  msg.voice = voices[GetChoosenVoicesFromUser()];
   window.speechSynthesis.speak(msg);
 }

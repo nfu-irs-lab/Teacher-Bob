@@ -1,40 +1,118 @@
 "use strict";
-var _a, _b;
 function GoStorySelectPage() {
     open("http://127.0.0.1:5500/public/StorySelectPage.html");
 }
-// 獲取使用者選擇的故事
+let StoryNum;
+let PageCount = 0;
+//透過fetch在後台服務器獲取數據，透過第一個then將原始數據轉換成.json格式
+const GetDataFromJson = fetch("http://127.0.0.1:5500/public/resourse/story.json").then((response) => response.json());
 function GetInputStory() {
     const InputStory = document.getElementById("Storylist");
-    if (typeof InputStory != null) {
-        InitializePage(InputStory);
+    StoryNum = Number(InputStory === null || InputStory === void 0 ? void 0 : InputStory.value.slice(5));
+    return StoryNum - 1;
+}
+function InitializePage() {
+    var _a, _b;
+    //將第一層頁面隱藏，顯示第二層頁面
+    (_a = document.getElementById("SelectPage")) === null || _a === void 0 ? void 0 : _a.setAttribute("style", "display:none");
+    (_b = document.getElementById("WorkPage")) === null || _b === void 0 ? void 0 : _b.setAttribute("style", "display:block");
+    //初始化語言選擇選單
+    speechSynthesis.addEventListener("voiceschanged", function () {
+        let LanguageOption = window.speechSynthesis.getVoices();
+        console.log(LanguageOption);
+        for (let i = 0; i < LanguageOption.length; i++) {
+            let LanguageSelect = document.getElementById("LanguageSelect");
+            let OptionFromBrowser = document.createElement("option");
+            OptionFromBrowser.setAttribute("value", "" + i);
+            OptionFromBrowser.textContent = LanguageOption[i].name;
+            LanguageSelect.appendChild(OptionFromBrowser);
+        }
+    });
+}
+let EngSubState = false;
+function ChangeState() {
+    var _a, _b;
+    if (EngSubState == false) {
+        (_a = document
+            .getElementById("EnglishSubtitle")) === null || _a === void 0 ? void 0 : _a.setAttribute("style", "display:block");
+        EngSubState = true;
     }
-    else
-        alert("找不到故事");
+    else {
+        (_b = document
+            .getElementById("EnglishSubtitle")) === null || _b === void 0 ? void 0 : _b.setAttribute("style", "display:none");
+        EngSubState = false;
+    }
 }
-function InitializePage(TitleName) {
-    // 顯示故事中英文標題
-    const title = document.getElementById("title");
-    if (title != null)
-        title.innerHTML = TitleName.value + "<br>";
-    console.log(TitleName.value);
-    let obj = JSON.parse('{"text":"string"}');
-    console.log(obj.text);
+function StringfyJson(JsonWords) {
+    let StringfyJsonWord = JSON.stringify(JsonWords);
+    let ParseJsonWord = JSON.parse(StringfyJsonWord);
+    return ParseJsonWord;
 }
-// const mode = require("./StoryLib/text.json");
-// for (let i = 0; i < mode.length; i++) {
-//   console.log(mode[i]);
-// }
-fetch("./resourse/story.json")
-    .then((response) => response.json())
-    .then((json) => console.log(json[0].id));
-// document
-//   .getElementById(InputStory?.value as string)
-//   ?.addEventListener("click", () => {
-//     console.log(InputStory?.value);
-//     // 關閉故事選擇介面
-//     let StoryList = document.getElementById("storylist");
-//     StoryList?.setAttribute("style", "display:none");
+let CurrentPageNumber = 0;
+function ShowEnglishSubtitle() {
+    let EnglishSubtitleShow = document.getElementById("EnglishSubtitle");
+    if ((EnglishSubtitleShow === null || EnglishSubtitleShow === void 0 ? void 0 : EnglishSubtitleShow.style.display) == "none") {
+        EnglishSubtitleShow.setAttribute("style", "display:block");
+        let Showbutton = document.getElementById("ShowEnglishButton");
+        Showbutton === null || Showbutton === void 0 ? void 0 : Showbutton.addEventListener("click", function () {
+            let number = GetInputStory();
+            GetDataFromJson.then(function (json) {
+                StringfyJson(json[number].data.pages[CurrentPageNumber].text);
+                let Target = document.getElementById("EnglishSubtitle");
+                Target.innerHTML = StringfyJson(json[number].data.pages[CurrentPageNumber].text);
+            });
+        });
+    }
+    else {
+        EnglishSubtitleShow === null || EnglishSubtitleShow === void 0 ? void 0 : EnglishSubtitleShow.setAttribute("style", "display:none");
+    }
+}
+document.getElementById("NextPageButton").onclick = NestLine;
+function NestLine() {
+    let InputStoryNumber = GetInputStory();
+    GetDataFromJson.then(function (json) {
+        let Target = document.getElementById("EnglishSubtitle");
+        let Storylength = json[InputStoryNumber].data.pages.length;
+        if (CurrentPageNumber >= Storylength - 1) {
+            CurrentPageNumber = Storylength - 1;
+            Target.innerHTML = StringfyJson(json[InputStoryNumber].data.pages[CurrentPageNumber].text);
+            console.log(CurrentPageNumber);
+        }
+        else {
+            CurrentPageNumber++;
+            Target.innerHTML = StringfyJson(json[InputStoryNumber].data.pages[CurrentPageNumber].text);
+        }
+    });
+}
+document.getElementById("LastPageButton").onclick = LastLine;
+function LastLine() {
+    let InputStoryNumber = GetInputStory();
+    GetDataFromJson.then(function (json) {
+        let Target = document.getElementById("EnglishSubtitle");
+        if (CurrentPageNumber <= 0) {
+            CurrentPageNumber = 0;
+            Target.innerHTML = StringfyJson(json[InputStoryNumber].data.pages[CurrentPageNumber].text);
+            console.log(CurrentPageNumber);
+        }
+        else {
+            CurrentPageNumber--;
+            Target.innerHTML = StringfyJson(json[InputStoryNumber].data.pages[CurrentPageNumber].text);
+        }
+    });
+}
+document.getElementById("PlayButton").onclick = Play;
+function Play() {
+    var _a;
+    let ReadTarget = (_a = document.getElementById("EnglishSubtitle")) === null || _a === void 0 ? void 0 : _a.innerText;
+    var msg = new SpeechSynthesisUtterance(ReadTarget);
+    msg.rate = 1;
+    let VoiceChoose = document.getElementById("LanguageSelect");
+    let LanguageNumber = Number(VoiceChoose === null || VoiceChoose === void 0 ? void 0 : VoiceChoose.value);
+    var voices = window.speechSynthesis.getVoices();
+    msg.voice = voices[LanguageNumber];
+    window.speechSynthesis.speak(msg);
+}
+// var voices = window.speechSynthesis.getVoices();
 //     // 開啟英文字幕
 //     const OpenEnglishSubtitle = document.getElementById("EnglishSubtitle");
 //     OpenEnglishSubtitle?.setAttribute("style", "display:block");
@@ -45,9 +123,4 @@ fetch("./resourse/story.json")
 //     if (OpenChineseButton != null) OpenChineseButton.innerHTML = "456";
 //     // open("./StoryLib/story1.txt");
 //   });
-(_a = document.getElementById("text")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => { });
-const synth = window.speechSynthesis;
-const utter = new SpeechSynthesisUtterance();
-utter.text = (_b = document.getElementById("function5")) === null || _b === void 0 ? void 0 : _b.innerText;
-const speak = () => synth.speak(utter);
 //# sourceMappingURL=StoryTelling.js.map

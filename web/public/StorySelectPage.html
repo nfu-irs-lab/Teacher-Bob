@@ -8,24 +8,42 @@
     <link href="./style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <label for="Story">Choose a story:</label>
-    <select id="Storylist">
-      <option value="story1">年獸的故事</option>
-      <option value="story2">三隻小豬</option>
-      <option value="story3">小紅帽</option>
-    </select>
-    <input type="submit" value="Submit" onclick="GetInputStory()">
+    <div id="SelectPage" style="display: block">
+      <label id="Choose" for="Story">Choose a story:</label>
+      <select id="Storylist">
+        <option value="" disabled>請選擇故事</option>
+        <option value="story1">年獸的故事</option>
+        <option value="story2">三隻小豬</option>
+        <option value="story3">小紅帽</option>
+        <input type="submit" value="Submit" onclick="InitializePage()" />
+      </select>
+    </div>
 
+    <div id="WorkPage" style="display: none">
+      <h3 id="EnglishSubtitleLabel" style="display: block"></h3>
+      <h3 id="ChineseSubtitleLabel" style="display: block"></h3>
 
-    <ul id="subtitle">
-      <h3 id="EnglishSubtitle" style="display:none;">英文</h3>
-      <h3 id="ChineseSubtitle" style="display:none;">中文</h3>
-    </ul>
+      <button
+        id="ShowEnglishButton"
+        onclick="ShowEnglishSubtitle()"
+        style="display: block"
+      >
+        顯示英文字幕
+      </button>
 
-    <div id="ControlButton" style="display:none;">
-      <button id="ShowEnglishButton" >顯示英文字幕</button>
-      <button id="ShowChineseButton" >顯示中文字幕</button>
-      <button id="text">隱藏按鈕</button>
+      <h2 id="EnglishSubtitle" style="display: none"></h2>
+      <h2 id="ChineseSubtitle" style="display: none"></h2>
+
+      <button id="NextPageButton" style="display: block">下一句</button>
+
+      <button id="LastPageButton" style="display: block">上一句</button>
+
+      <button id="PlayButton" style="display: block">播放</button>
+      <select id="LanguageSelect">
+        <option value="" disabled>請選擇語言</option>
+      </select>
+    </div>
+
     <script type="text/Javascript" src="./StoryTelling.js"></script>
   </body>
 </html>

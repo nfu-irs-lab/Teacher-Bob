@@ -1,34 +1,39 @@
 <html>
-    <head></head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>學單字</title>
-    <body>
-        <script src = "learnWords.js"></script>
-            
-            <style>
-            h1 {text-align: center;}
-            </style>
-            </head>
-            <body>
-                <div>   
-            <h1 style="font-size:300%;">學單字</h1>
-            </body>
-            <h3 id="EnglishSubtitleLabel" style="display: block"></h3>
-            <h3 id="ChineseSubtitleLabel" style="display: block"></h3>
-            <button
-        id="ShowButton"
-        onclick="ShowLearnWord()"
-        style="display: block"
-      >
-        測試
-      </button>
-            
-      <h2 id="EnglishSubtitle" style="display: none"></h2>
-      <h2 id="ChineseSubtitle" style="display: none"></h2>
-    </body>
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+  </head>
 
+  <body>
+    <button id="ShowEnglishWordButton" onclick="ShowEnglishWordtitle()"style="display: block">隨機單字</button>
+    <h2 id="EnglishWordtitle" style="display: none"></h2>
+    <button id="NextVacButton" style="display: block">下一個單字</button>
 
-    
+    <button id="LastVacButton" style="display: block">上一個單字</button>
 
-</html>
-    </body>
+    <button id="PlayButton" style="display: block">播放</button>
+
+    <select id="VacSelect" style="display: block">
+      <option value="" disabled>請選擇單字</option>
+    </select>
+
+    <select id="LanguageSelect" style="display: block">
+      <option value="" disabled>請選擇語言</option>
+    </select>
+
+    <select id="LanguageSpeed" style="display: block">
+      <option value="" disabled>請選擇速度</option>
+      <option value="0.3">0.3</option>
+      <option value="0.5">0.5</option>
+      <option value="0.8">0.8</option>
+      <option value="1.0">1.0</option>
+      <option value="1.2">1.2</option>
+      <option value="1.5">1.5</option>
+      <option value="2.0">2.0</option>
+    </select>
+    <script type="text/Javascript" src="./learnWords.js"></script>
+  </body>
 </html>

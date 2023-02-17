@@ -4,6 +4,7 @@ function goToLearnWord() {
     open('http://127.0.0.1:5500/public/learnWords.html');
 }
 let grabWord;
+<<<<<<< HEAD
 //利用亂數抓單字庫的單字
 grabWord = Math.floor(Math.random() * 51); //待改
 console.log(grabWord);
@@ -55,6 +56,17 @@ function NestVac() {
 function ShowCurrentPageEnglishSubtitle(CurrentPageNumber) {
     throw new Error("Function not implemented.");
 }
+=======
+grabWord = Math.floor(Math.random() * 51); //利用亂數抓單字庫的單字
+//目前單字庫有52組單字，如有新增記得改()後面的數字與此註記
+console.log(grabWord);
+//將vocabularies.json檔導入learnWord.ts
+let a;
+fetch("./resourse/vocabularies.json")
+    .then((resourse) => resourse.json())
+    .then((json) => a = (json[grabWord].data.name))
+    .then((a) => console.log(a));
+>>>>>>> parent of c56ade1 (解決 cannot read properties of undefined就可以完成功能)
 // fetch("./resourse/vocabularies.json") 
 // .then((resourse) => resourse.json())
 // .then((json) => console.log(json[grabWord].data.sentence));

@@ -3,6 +3,7 @@ function goToLearnWord(){
   open('http://127.0.0.1:5500/public/learnWords.html')
 }
 
+<<<<<<< HEAD
 function StringConvertJson(JsonWords: string): string {
   let StringfyJsonWord = JSON.stringify(JsonWords);
   let ParseJsonWord: string = JSON.parse(StringfyJsonWord);
@@ -26,6 +27,20 @@ function ShowCurrentPageEnglishWord() {
     Target!.innerHTML = StringfyJson(CurrentPageEngWord);
   });
 }
+=======
+let grabWord : number
+grabWord = Math.floor(Math.random()*51)//利用亂數抓單字庫的單字
+//目前單字庫有52組單字，如有新增記得改()後面的數字與此註記
+
+console.log(grabWord)
+//將vocabularies.json檔導入learnWord.ts
+
+let a : string
+fetch("./resourse/vocabularies.json") 
+.then((resourse) => resourse.json())
+.then((json) =>  a = (json[grabWord].data.name))
+.then((a) => console.log(a))
+>>>>>>> parent of c56ade1 (解決 cannot read properties of undefined就可以完成功能)
 
 
 const GetDataFromJson1 = fetch(

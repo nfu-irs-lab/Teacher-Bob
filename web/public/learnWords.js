@@ -50,22 +50,39 @@ GetDataFromJson1.then(function (json) {
 //     else ShowCurrentPageEnglishSubtitle(CurrentPageNumber++);
 //   });
 // }
-// 顯示單字(中、英)
-document.getElementById("ShowEng&ChinWordButton").onclick = ShowWordtitle;
-function ShowWordtitle() {
-    let TheWordtitle = document.getElementById("Eng&ChinWordtitle");
-    let InputEngWordNumber = GetInputWordNumber();
-    let Target = document.getElementById("Eng&ChinWordtitle");
-    if ((TheWordtitle === null || TheWordtitle === void 0 ? void 0 : TheWordtitle.style.display) == "none" || (TheWordtitle === null || TheWordtitle === void 0 ? void 0 : TheWordtitle.innerHTML) == null) {
-        TheWordtitle.setAttribute("style", "display:block");
+// 顯示英文單字
+document.getElementById("ShowEngWordButton").onclick = ShowEnglishWordtitle;
+function ShowEnglishWordtitle() {
+    let TheEngWordtitle = document.getElementById("EnglishWordtitle");
+    let TheChinWordtitle = document.getElementById("ChineseWordtitle");
+    let InputWordNumber = GetInputWordNumber();
+    let TargetEng = document.getElementById("EnglishWordtitle");
+    let TargetChin = document.getElementById("ChineseWordtitle");
+    if ((TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.style.display) == "none" || (TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.innerHTML) == null) {
+        TheEngWordtitle.setAttribute("style", "display:block");
         GetDataFromJson1.then(function (json) {
-            let CurrentPageEngWord = json[InputEngWordNumber].data.name;
-            Target.innerHTML = StringJson(CurrentPageEngWord);
+            let CurrentPageEngWord = json[InputWordNumber].data.name;
+            TargetEng.innerHTML = StringJson(CurrentPageEngWord);
             console.log(CurrentPageEngWord);
+            // 中文單字翻譯
+            let CurrentPageChinWord = json[InputWordNumber].data.languages[0].tr_name;
+            TargetChin.innerHTML = StringJson(CurrentPageChinWord);
+            // 顯示中文單字翻譯
+            document.getElementById("ShowChinWordButton").onclick = ShowChineseWordtitle;
+            function ShowChineseWordtitle() {
+                var _a;
+                if ((TheChinWordtitle === null || TheChinWordtitle === void 0 ? void 0 : TheChinWordtitle.style.display) == "none" || (TheChinWordtitle === null || TheChinWordtitle === void 0 ? void 0 : TheChinWordtitle.innerHTML) == null) {
+                    TheChinWordtitle.setAttribute("style", "display:block");
+                    (_a = document.getElementById("ChineseWordtitle")) === null || _a === void 0 ? void 0 : _a.setAttribute("style", "display:block");
+                }
+                else {
+                    TheChinWordtitle === null || TheChinWordtitle === void 0 ? void 0 : TheChinWordtitle.setAttribute("style", "display:none");
+                }
+            }
         });
     }
     else {
-        TheWordtitle === null || TheWordtitle === void 0 ? void 0 : TheWordtitle.setAttribute("style", "display:none");
+        TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.setAttribute("style", "display:none");
     }
 }
 // 顯示中文翻譯

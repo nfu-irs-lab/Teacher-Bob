@@ -1,4 +1,5 @@
 "use strict";
+//開啟learnWord的網址
 function goToLearnWord() {
     open('http://127.0.0.1:5500/public/learnWords.html');
 }
@@ -49,43 +50,42 @@ GetDataFromJson1.then(function (json) {
 //     else ShowCurrentPageEnglishSubtitle(CurrentPageNumber++);
 //   });
 // }
-// 顯示英文單字
-document.getElementById("ShowEnglishWordButton").onclick = ShowEnglishWordtitle;
-function ShowEnglishWordtitle() {
-    let EngWordtitle = document.getElementById("EnglishWordtitle");
+// 顯示單字(中、英)
+document.getElementById("ShowEng&ChinWordButton").onclick = ShowWordtitle;
+function ShowWordtitle() {
+    let TheWordtitle = document.getElementById("Eng&ChinWordtitle");
     let InputEngWordNumber = GetInputWordNumber();
-    let Target = document.getElementById("EnglishWordtitle");
-    if ((EngWordtitle === null || EngWordtitle === void 0 ? void 0 : EngWordtitle.style.display) == "none" || (EngWordtitle === null || EngWordtitle === void 0 ? void 0 : EngWordtitle.innerHTML) == null) {
-        EngWordtitle.setAttribute("style", "display:block");
+    let Target = document.getElementById("Eng&ChinWordtitle");
+    if ((TheWordtitle === null || TheWordtitle === void 0 ? void 0 : TheWordtitle.style.display) == "none" || (TheWordtitle === null || TheWordtitle === void 0 ? void 0 : TheWordtitle.innerHTML) == null) {
+        TheWordtitle.setAttribute("style", "display:block");
         GetDataFromJson1.then(function (json) {
             let CurrentPageEngWord = json[InputEngWordNumber].data.name;
             Target.innerHTML = StringJson(CurrentPageEngWord);
             console.log(CurrentPageEngWord);
         });
-        // 顯示中文翻譯
-        document.getElementById("ShowChinesehWordButton").onclick = ShowChineseWordtitle;
-        function ShowChineseWordtitle() {
-            let ChinWordtitle = document.getElementById("ChineseWordtitle");
-            let InputChinWordNumber = InputEngWordNumber;
-            let Target = document.getElementById("ChineseWordtitle");
-            if ((ChinWordtitle === null || ChinWordtitle === void 0 ? void 0 : ChinWordtitle.style.display) == "none" || (ChinWordtitle === null || ChinWordtitle === void 0 ? void 0 : ChinWordtitle.innerHTML) == null) {
-                if (ChinWordtitle.setAttribute("style", "display:block"))
-                    ;
-                GetDataFromJson1.then(function (json) {
-                    let CurrentPageChinWord = json[InputChinWordNumber].data.languages[0].tr_name;
-                    Target.innerHTML = StringJson(CurrentPageChinWord);
-                    console.log(CurrentPageChinWord);
-                });
-            }
-            else {
-                ChinWordtitle === null || ChinWordtitle === void 0 ? void 0 : ChinWordtitle.setAttribute("style", "display:none");
-            }
-        }
     }
     else {
-        EngWordtitle === null || EngWordtitle === void 0 ? void 0 : EngWordtitle.setAttribute("style", "display:none");
+        TheWordtitle === null || TheWordtitle === void 0 ? void 0 : TheWordtitle.setAttribute("style", "display:none");
     }
 }
+// 顯示中文翻譯
+// document.getElementById("ShowChinesehWordButton")!.onclick = ShowChineseWordtitle;
+// function ShowChineseWordtitle() {
+// let ChinWordtitle = document.getElementById("ChineseWordtitle");
+// let InputChinWordNumber = InputEngWordNumber;
+// let Target = document.getElementById("ChineseWordtitle");
+// if (ChinWordtitle?.style.display == "none" || ChinWordtitle?.innerHTML == null) {
+//   // if
+//   ChinWordtitle!.setAttribute("style", "display:block");
+// GetDataFromJson1.then(function (json) {
+// let CurrentPageChinWord =
+//  json[InputChinWordNumber].data.languages[0].tr_name;
+// Target!.innerHTML = StringJson(CurrentPageChinWord);
+// console.log(CurrentPageChinWord);
+// });
+// } else {
+//   ChinWordtitle?.setAttribute("style", "display:none");
+// }}
 // fetch("./resourse/vocabularies.json")
 // .then((resourse) => resourse.json())
 // .then((json) => console.log(json[grabWord].data.sentence));

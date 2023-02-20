@@ -70,7 +70,8 @@ function ShowEnglishWordtitle() {
             let InputChinWordNumber = InputEngWordNumber;
             let Target = document.getElementById("ChineseWordtitle");
             if ((ChinWordtitle === null || ChinWordtitle === void 0 ? void 0 : ChinWordtitle.style.display) == "none" || (ChinWordtitle === null || ChinWordtitle === void 0 ? void 0 : ChinWordtitle.innerHTML) == null) {
-                ChinWordtitle.setAttribute("style", "display:block");
+                if (ChinWordtitle.setAttribute("style", "display:block"))
+                    ;
                 GetDataFromJson1.then(function (json) {
                     let CurrentPageChinWord = json[InputChinWordNumber].data.languages[0].tr_name;
                     Target.innerHTML = StringJson(CurrentPageChinWord);

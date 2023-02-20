@@ -90,16 +90,23 @@ function ShowEnglishWordtitle()
 
       // 顯示中文單字翻譯
       document.getElementById("ShowChinWordButton")!.onclick = ShowChineseWordtitle;
-      function ShowChineseWordtitle() 
+      function ShowChineseWordtitle()
       {
-        if (TheChinWordtitle?.style.display == "none" || TheChinWordtitle?.innerHTML == null) 
-        {
-          TheChinWordtitle!.setAttribute("style", "display:block");
-          document.getElementById("ChineseWordtitle")?.setAttribute("style", "display:block");
+       if (TheEngWordtitle?.style.display == "block" || TheEngWordtitle?.innerHTML == null)   
+       {
+         if (TheChinWordtitle?.style.display == "none" || TheChinWordtitle?.innerHTML == null ) 
+         {
+           TheChinWordtitle!.setAttribute("style", "display:block");
+           document.getElementById("ChineseWordtitle")?.setAttribute("style", "display:block");
+         }
+         else 
+         {
+          TheChinWordtitle?.setAttribute("style", "display:none");
+         }
         }
-        else 
+        else
         {
-         TheChinWordtitle?.setAttribute("style", "display:none");
+          TheChinWordtitle?.setAttribute("style", "display:none"); 
         }
       }
     });

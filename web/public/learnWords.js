@@ -3,17 +3,37 @@
 function goToLearnWord() {
     open('http://127.0.0.1:5500/public/learnWords.html');
 }
-let grabWord;
-<<<<<<< HEAD
-//利用亂數抓單字庫的單字
-grabWord = Math.floor(Math.random() * 51); //待改
-console.log(grabWord);
-const GetDataFromJson1 = fetch("http://127.0.0.1:5500/public/resourse/vocabularies.json").then((response) => response.json());
-function StringConvertJson(JsonWords) {
+function StringJson(JsonWords) {
     let StringfyJsonWord = JSON.stringify(JsonWords);
     let ParseJsonWord = JSON.parse(StringfyJsonWord);
     return ParseJsonWord;
 }
+const GetDataFromJson1 = fetch("http://127.0.0.1:5500/public/resourse/vocabularies.json").then((response) => response.json());
+function ShowCurrentPageEnglishSubtitle() {
+    GetDataFromJson1.then(function (json) {
+        let InputWordNumber = GetInputWordNumber();
+        let Target = document.getElementById("EnglishSubtitle");
+        let CurrentPageEngWord = json[InputWordNumber].data.name;
+        Target.innerHTML = StringfyJson(CurrentPageEngWord);
+    });
+}
+let grabWord = 0;
+function GetInputWordNumber() {
+    //利用亂數抓單字庫的單字
+    grabWord = Math.floor(Math.random() * 51); //待改
+    console.log(grabWord);
+    return grabWord;
+}
+// function ShowCurrentPageEnglishWord() {
+//   GetDataFromJson1.then(function (json) {
+// let InputEngWordNumber = GetInputWordNumber();
+// let Target = document.getElementById("EnglishWordtitle");
+// let CurrentPageEngWord =
+// json[InputEngWordNumber].data.name;
+// Target!.innerHTML = StringJson(CurrentPageEngWord);
+// });
+// }
+//語言選單
 speechSynthesis.addEventListener("voiceschanged", function () {
     let LanguageOption = window.speechSynthesis.getVoices();
     console.log(LanguageOption);
@@ -35,45 +55,42 @@ GetDataFromJson1.then(function (json) {
         Vaclist.appendChild(VacNameFromJson);
     }
 });
-function GetInputWordNumber() {
-    const InputStory = document.getElementById("Storylist");
-    StoryNum = Number(InputStory === null || InputStory === void 0 ? void 0 : InputStory.value.slice(5));
-    return StoryNum - 1;
-} //不需要用
-let CurrentVacNumber = 0;
-document.getElementById("NextVacButton").onclick = NestVac;
-function NestVac() {
-    let InputWordNumber = GetInputWordNumber();
-    GetDataFromJson.then(function (json) {
-        let Storylength = json[InputWordNumber].data.pages.length;
-        //判斷邊界
-        if (CurrentPageNumber >= Storylength - 1)
-            ShowCurrentPageEnglishSubtitle(CurrentPageNumber);
-        else
-            ShowCurrentPageEnglishSubtitle(CurrentPageNumber++);
-    });
+// let CurrentVacNumber: number = 0;
+// document.getElementById("NextVacButton")!.onclick = NestVac;
+// function NestVac() {
+//   let InputStoryNumber = GetInputWordNumber();
+//   GetDataFromJson.then(function (json) {
+//     let Storylength = json[InputStoryNumber].data.name.length;
+//     //判斷邊界
+//     if (CurrentPageNumber >= Storylength - 1)
+//       ShowCurrentPageEnglishSubtitle(CurrentPageNumber);
+//     else ShowCurrentPageEnglishSubtitle(CurrentPageNumber++);
+//   });
+// }
+document.getElementById("ShowEnglishWordButton").onclick = ShowEnglishWordtitle;
+function ShowEnglishWordtitle() {
+    let EngWordtitle = document.getElementById("EnglishWordtitle");
+    let InputEngWordNumber = GetInputWordNumber();
+    let Target = document.getElementById("EnglishWordtitle");
+    if ((EngWordtitle === null || EngWordtitle === void 0 ? void 0 : EngWordtitle.style.display) == "none" || (EngWordtitle === null || EngWordtitle === void 0 ? void 0 : EngWordtitle.innerHTML) == null) {
+        EngWordtitle.setAttribute("style", "display:block");
+        GetDataFromJson1.then(function (json) {
+            let CurrentPageEngWord = json[InputEngWordNumber].data.name;
+            Target.innerHTML = StringJson(CurrentPageEngWord);
+            console.log(CurrentPageEngWord);
+        });
+    }
+    else {
+        EngWordtitle === null || EngWordtitle === void 0 ? void 0 : EngWordtitle.setAttribute("style", "display:none");
+    }
 }
-function ShowCurrentPageEnglishSubtitle(CurrentPageNumber) {
-    throw new Error("Function not implemented.");
-}
-=======
-grabWord = Math.floor(Math.random() * 51); //利用亂數抓單字庫的單字
-//目前單字庫有52組單字，如有新增記得改()後面的數字與此註記
-console.log(grabWord);
-//將vocabularies.json檔導入learnWord.ts
-let a;
-fetch("./resourse/vocabularies.json")
-    .then((resourse) => resourse.json())
-    .then((json) => a = (json[grabWord].data.name))
-    .then((a) => console.log(a));
->>>>>>> parent of c56ade1 (解決 cannot read properties of undefined就可以完成功能)
-// fetch("./resourse/vocabularies.json") 
+// fetch("./resourse/vocabularies.json")
 // .then((resourse) => resourse.json())
 // .then((json) => console.log(json[grabWord].data.sentence));
-// fetch("./resourse/vocabularies.json") 
+// fetch("./resourse/vocabularies.json")
 // .then((resourse) => resourse.json())
 // .then((json) => console.log(json[grabWord].data.languages[0].tr_name));
-// fetch("./resourse/vocabularies.json") 
+// fetch("./resourse/vocabularies.json")
 // .then((resourse) => resourse.json())
 // .then((json) => console.log(json[grabWord].data.languages[0].tr_sentence));
 //# sourceMappingURL=learnWords.js.map

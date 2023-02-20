@@ -1,5 +1,4 @@
 "use strict";
-//開啟learnWord的網址
 function goToLearnWord() {
     open('http://127.0.0.1:5500/public/learnWords.html');
 }

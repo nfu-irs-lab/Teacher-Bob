@@ -38,19 +38,6 @@ GetDataFromJson1.then(function (json) {
         Vaclist.appendChild(VacNameFromJson);
     }
 });
-// let CurrentVacNumber: number = 0;
-// document.getElementById("NextVacButton")!.onclick = NestVac;
-// function NestVac() {
-//   let InputStoryNumber = GetInputWordNumber();
-//   GetDataFromJson.then(function (json) {
-//     let Storylength = json[InputStoryNumber].data.name.length;
-//     //判斷邊界
-//     if (CurrentPageNumber >= Storylength - 1)
-//       ShowCurrentPageEnglishSubtitle(CurrentPageNumber);
-//     else ShowCurrentPageEnglishSubtitle(CurrentPageNumber++);
-//   });
-// }
-// 顯示英文單字
 document.getElementById("ShowEngWordButton").onclick = ShowEnglishWordtitle;
 function ShowEnglishWordtitle() {
     let TheEngWordtitle = document.getElementById("EnglishWordtitle");
@@ -88,6 +75,7 @@ function ShowEnglishWordtitle() {
     }
     else {
         TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.setAttribute("style", "display:none");
+        TheChinWordtitle === null || TheChinWordtitle === void 0 ? void 0 : TheChinWordtitle.setAttribute("style", "display:none");
     }
 }
 //# sourceMappingURL=learnWords.js.map

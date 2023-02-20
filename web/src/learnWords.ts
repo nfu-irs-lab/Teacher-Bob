@@ -39,7 +39,8 @@ speechSynthesis.addEventListener("voiceschanged", function ()
   }
 });
       
-GetDataFromJson1.then(function (json) {
+GetDataFromJson1.then(function (json) 
+{
   let TotalAmountOfVac = json.length;
   for (let i = 0; i < TotalAmountOfVac; i++) 
   {
@@ -51,20 +52,6 @@ GetDataFromJson1.then(function (json) {
   }
 });
       
-      // let CurrentVacNumber: number = 0;
-      // document.getElementById("NextVacButton")!.onclick = NestVac;
-      // function NestVac() {
-      //   let InputStoryNumber = GetInputWordNumber();
-      //   GetDataFromJson.then(function (json) {
-      //     let Storylength = json[InputStoryNumber].data.name.length;
-      //     //判斷邊界
-      //     if (CurrentPageNumber >= Storylength - 1)
-      //       ShowCurrentPageEnglishSubtitle(CurrentPageNumber);
-      //     else ShowCurrentPageEnglishSubtitle(CurrentPageNumber++);
-      //   });
-      // }
-
-    // 顯示英文單字
 document.getElementById("ShowEngWordButton")!.onclick = ShowEnglishWordtitle;
 function ShowEnglishWordtitle()
 {
@@ -114,5 +101,6 @@ function ShowEnglishWordtitle()
   else 
   {
     TheEngWordtitle?.setAttribute("style", "display:none");
+    TheChinWordtitle?.setAttribute("style", "display:none"); 
   }
 }

@@ -90,31 +90,4 @@ function ShowEnglishWordtitle() {
         TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.setAttribute("style", "display:none");
     }
 }
-// 顯示中文翻譯
-// document.getElementById("ShowChinesehWordButton")!.onclick = ShowChineseWordtitle;
-// function ShowChineseWordtitle() {
-// let ChinWordtitle = document.getElementById("ChineseWordtitle");
-// let InputChinWordNumber = InputEngWordNumber;
-// let Target = document.getElementById("ChineseWordtitle");
-// if (ChinWordtitle?.style.display == "none" || ChinWordtitle?.innerHTML == null) {
-//   // if
-//   ChinWordtitle!.setAttribute("style", "display:block");
-// GetDataFromJson1.then(function (json) {
-// let CurrentPageChinWord =
-//  json[InputChinWordNumber].data.languages[0].tr_name;
-// Target!.innerHTML = StringJson(CurrentPageChinWord);
-// console.log(CurrentPageChinWord);
-// });
-// } else {
-//   ChinWordtitle?.setAttribute("style", "display:none");
-// }}
-// fetch("./resourse/vocabularies.json")
-// .then((resourse) => resourse.json())
-// .then((json) => console.log(json[grabWord].data.sentence));
-// fetch("./resourse/vocabularies.json")
-// .then((resourse) => resourse.json())
-// .then((json) => console.log(json[grabWord].data.languages[0].tr_name));
-// fetch("./resourse/vocabularies.json")
-// .then((resourse) => resourse.json())
-// .then((json) => console.log(json[grabWord].data.languages[0].tr_sentence));
 //# sourceMappingURL=learnWords.js.map

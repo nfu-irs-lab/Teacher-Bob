@@ -13,33 +13,13 @@ function goToLearnWord(){
         "http://127.0.0.1:5500/public/resourse/vocabularies.json"
         ).then((response) => response.json());
 
-    function ShowCurrentPageEnglishSubtitle() {
-      GetDataFromJson1.then(function (json) {
-          let InputWordNumber = GetInputWordNumber();
-          let Target = document.getElementById("EnglishSubtitle");
-          let CurrentPageEngWord =
-          json[InputWordNumber].data.name;
-          Target!.innerHTML = StringfyJson(CurrentPageEngWord);
-        });
-      }
-    
     let grabWord : number = 0
+     //利用亂數抓單字庫的單字
     function GetInputWordNumber(): number{
-    //利用亂數抓單字庫的單字
     grabWord = Math.floor(Math.random()*51)//待改
     console.log(grabWord)
     return grabWord
     }
-    
-    // function ShowCurrentPageEnglishWord() {
-    //   GetDataFromJson1.then(function (json) {
-    // let InputEngWordNumber = GetInputWordNumber();
-    // let Target = document.getElementById("EnglishWordtitle");
-    // let CurrentPageEngWord =
-    // json[InputEngWordNumber].data.name;
-    // Target!.innerHTML = StringJson(CurrentPageEngWord);
-    // });
-    // }
     
     //語言選單
     speechSynthesis.addEventListener("voiceschanged", function () {
@@ -77,7 +57,8 @@ function goToLearnWord(){
       //     else ShowCurrentPageEnglishSubtitle(CurrentPageNumber++);
       //   });
       // }
-    
+
+    // 顯示英文單字
     document.getElementById("ShowEnglishWordButton")!.onclick = ShowEnglishWordtitle;
     function ShowEnglishWordtitle() {
     let EngWordtitle = document.getElementById("EnglishWordtitle");
@@ -91,10 +72,32 @@ function goToLearnWord(){
     Target!.innerHTML = StringJson(CurrentPageEngWord);
     console.log(CurrentPageEngWord);
     });
+
+    // 顯示中文翻譯
+    document.getElementById("ShowChinesehWordButton")!.onclick = ShowChineseWordtitle;
+    function ShowChineseWordtitle() {
+    let ChinWordtitle = document.getElementById("ChineseWordtitle");
+    let InputChinWordNumber = InputEngWordNumber;
+    let Target = document.getElementById("ChineseWordtitle");
+    if (ChinWordtitle?.style.display == "none" || ChinWordtitle?.innerHTML == null) {
+      if
+      ChinWordtitle!.setAttribute("style", "display:block");
+    GetDataFromJson1.then(function (json) {
+    let CurrentPageChinWord =
+     json[InputChinWordNumber].data.languages[0].tr_name;
+    Target!.innerHTML = StringJson(CurrentPageChinWord);
+    console.log(CurrentPageChinWord);
+    });
+    } else {
+      ChinWordtitle?.setAttribute("style", "display:none");
+    }
+    }
     } else {
     EngWordtitle?.setAttribute("style", "display:none");
     }
     }
+
+    
     
     // fetch("./resourse/vocabularies.json")
     // .then((resourse) => resourse.json())

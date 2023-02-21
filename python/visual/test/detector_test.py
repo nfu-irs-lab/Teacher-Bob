@@ -14,6 +14,9 @@ OBJECT_DETECTOR_ID = 2
 
 
 class TestListener(CameraListener):
+    def onNothingDetected(self, _id, image):
+        pass
+
     def onImageRead(self, image):
         # cv2.imshow("result", image)
         pass

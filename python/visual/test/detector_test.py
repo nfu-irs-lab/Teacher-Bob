@@ -14,8 +14,12 @@ OBJECT_DETECTOR_ID = 2
 
 
 class TestListener(CameraListener):
+    def onNothingDetected(self, _id, image):
+        cv2.imshow("result", image)
+        pass
+
     def onImageRead(self, image):
-        # cv2.imshow("result", image)
+
         pass
 
     def onDetect(self, detector_id, image, data_list: List[DetectorData]):
@@ -26,8 +30,7 @@ class TestListener(CameraListener):
                 visual_utils.annotateLabel(labeledImage,
                                            data.x, data.y,
                                            data.width, data.height,
-                                           label,
-                                           overwrite=True)
+                                           label)
             cv2.imshow("face", labeledImage)
 
         elif detector_id == OBJECT_DETECTOR_ID:
@@ -36,8 +39,7 @@ class TestListener(CameraListener):
                 visual_utils.annotateLabel(labeledImage,
                                            data.x, data.y,
                                            data.width, data.height,
-                                           label,
-                                           overwrite=True)
+                                           label)
             cv2.imshow("object", labeledImage)
 
 
@@ -50,7 +52,7 @@ if __name__ == '__main__':
     monitor.registerDetector(ObjectDetector(OBJECT_DETECTOR_ID), False)
 
     # 啟用臉部辨識器
-    monitor.setDetectorEnable(FACE_DETECTOR_ID, True)
+    # monitor.setDetectorEnable(FACE_DETECTOR_ID, True)
     # 啟用物品辨識器
     monitor.setDetectorEnable(OBJECT_DETECTOR_ID, True)
 

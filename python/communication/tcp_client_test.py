@@ -1,7 +1,7 @@
 import socket
 from threading import Thread
 
-from communication.concrete.crt_comm import EOLPackageHandler, TCPCommDevice
+from communication.concrete.crt_comm import TCPCommDevice, EOLPackageHandler
 from communication.framework.fw_comm import CommDevice
 
 HOST = '127.0.0.1'
@@ -11,7 +11,9 @@ PORT = 4444
 def receive(commDevice: CommDevice):
     while True:
         data = commDevice.read()
-        if data is not None:
+        if data is None:
+            pass
+        else:
             strs = data.decode(encoding='utf-8')
             print("receive:", strs)
 
@@ -25,4 +27,4 @@ if __name__ == "__main__":
 
     while True:
         text = input()
-        commDevice.write(text.encode(encoding='utf-8'))
+        package = commDevice.write(text.encode(encoding='utf-8'))

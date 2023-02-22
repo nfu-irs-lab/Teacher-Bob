@@ -57,25 +57,42 @@ function ShowEnglishWordtitle()
 {
   let TheEngWordtitle = document.getElementById("EnglishWordtitle");
   let TheChinWordtitle = document.getElementById("ChineseWordtitle");
+  // let TheEngSentencetitle = document.getElementById("EnglishSentencetitle");
+  // let TheChinSentencetitle = document.getElementById("ChineseSentencetitle");
   let InputWordNumber = GetInputWordNumber();
-  let TargetEng = document.getElementById("EnglishWordtitle");
-  let TargetChin= document.getElementById("ChineseWordtitle");
+  let TargetEngWord = document.getElementById("EnglishWordtitle");
+  let TargetChinWord = document.getElementById("ChineseWordtitle");
+  let TargetEngSentence = document.getElementById("EnglishSentencetitle");
+  let TargetChinSentence = document.getElementById("ChineseSentencetitle");
   if (TheEngWordtitle?.style.display == "none" || TheEngWordtitle?.innerHTML == null) 
   {
     TheEngWordtitle!.setAttribute("style", "display:block");
+    TargetEngSentence!.setAttribute("style", "display:block");
     GetDataFromJson1.then(function (json) 
     {
+      // 英文單字顯示
       let CurrentPageEngWord =
       json[InputWordNumber].data.name;
-      TargetEng!.innerHTML = StringJson(CurrentPageEngWord);
+      TargetEngWord!.innerHTML = StringJson(CurrentPageEngWord);
       console.log(CurrentPageEngWord);
+
+      // 顯示英文例句
+      let CurrentPageEngSentence =
+      json[InputWordNumber].data.sentence;
+      TargetEngSentence!.innerHTML = StringJson(CurrentPageEngSentence);
+      console.log(CurrentPageEngSentence);
 
       // 中文單字翻譯
       let CurrentPageChinWord =
       json[InputWordNumber].data.languages[0].tr_name;
-      TargetChin!.innerHTML = StringJson(CurrentPageChinWord);
+      TargetChinWord!.innerHTML = StringJson(CurrentPageChinWord);
 
-      // 顯示中文單字翻譯
+      // 中文例句翻譯
+      let CurrentPageChinSentence  =
+      json[InputWordNumber].data.languages[0].tr_sentence;
+      TargetChinSentence!.innerHTML = StringJson(CurrentPageChinSentence );
+
+      // 顯示中文單字翻譯與例句翻譯
       document.getElementById("ShowChinWordButton")!.onclick = ShowChineseWordtitle;
       function ShowChineseWordtitle()
       {
@@ -85,15 +102,19 @@ function ShowEnglishWordtitle()
          {
            TheChinWordtitle!.setAttribute("style", "display:block");
            document.getElementById("ChineseWordtitle")?.setAttribute("style", "display:block");
+           TargetChinSentence!.setAttribute("style", "display:block");
+           document.getElementById("ChineseSentencetitle")?.setAttribute("style", "display:block");
          }
          else 
          {
           TheChinWordtitle?.setAttribute("style", "display:none");
+          TargetChinSentence?.setAttribute("style", "display:none");
          }
         }
         else
         {
           TheChinWordtitle?.setAttribute("style", "display:none"); 
+          TargetChinSentence?.setAttribute("style", "display:none");
         }
       }
     });
@@ -102,5 +123,7 @@ function ShowEnglishWordtitle()
   {
     TheEngWordtitle?.setAttribute("style", "display:none");
     TheChinWordtitle?.setAttribute("style", "display:none"); 
+    TargetEngSentence?.setAttribute("style", "display:none");
+    TargetChinSentence?.setAttribute("style", "display:none");
   }
 }

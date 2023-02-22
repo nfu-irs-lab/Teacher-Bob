@@ -42,33 +42,50 @@ document.getElementById("ShowEngWordButton").onclick = ShowEnglishWordtitle;
 function ShowEnglishWordtitle() {
     let TheEngWordtitle = document.getElementById("EnglishWordtitle");
     let TheChinWordtitle = document.getElementById("ChineseWordtitle");
+    // let TheEngSentencetitle = document.getElementById("EnglishSentencetitle");
+    // let TheChinSentencetitle = document.getElementById("ChineseSentencetitle");
     let InputWordNumber = GetInputWordNumber();
-    let TargetEng = document.getElementById("EnglishWordtitle");
-    let TargetChin = document.getElementById("ChineseWordtitle");
+    let TargetEngWord = document.getElementById("EnglishWordtitle");
+    let TargetChinWord = document.getElementById("ChineseWordtitle");
+    let TargetEngSentence = document.getElementById("EnglishSentencetitle");
+    let TargetChinSentence = document.getElementById("ChineseSentencetitle");
     if ((TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.style.display) == "none" || (TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.innerHTML) == null) {
         TheEngWordtitle.setAttribute("style", "display:block");
+        TargetEngSentence.setAttribute("style", "display:block");
         GetDataFromJson1.then(function (json) {
+            // 英文單字顯示
             let CurrentPageEngWord = json[InputWordNumber].data.name;
-            TargetEng.innerHTML = StringJson(CurrentPageEngWord);
+            TargetEngWord.innerHTML = StringJson(CurrentPageEngWord);
             console.log(CurrentPageEngWord);
+            // 顯示英文例句
+            let CurrentPageEngSentence = json[InputWordNumber].data.sentence;
+            TargetEngSentence.innerHTML = StringJson(CurrentPageEngSentence);
+            console.log(CurrentPageEngSentence);
             // 中文單字翻譯
             let CurrentPageChinWord = json[InputWordNumber].data.languages[0].tr_name;
-            TargetChin.innerHTML = StringJson(CurrentPageChinWord);
-            // 顯示中文單字翻譯
+            TargetChinWord.innerHTML = StringJson(CurrentPageChinWord);
+            // 中文例句翻譯
+            let CurrentPageChinSentence = json[InputWordNumber].data.languages[0].tr_sentence;
+            TargetChinSentence.innerHTML = StringJson(CurrentPageChinSentence);
+            // 顯示中文單字翻譯與例句翻譯
             document.getElementById("ShowChinWordButton").onclick = ShowChineseWordtitle;
             function ShowChineseWordtitle() {
-                var _a;
+                var _a, _b;
                 if ((TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.style.display) == "block" || (TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.innerHTML) == null) {
                     if ((TheChinWordtitle === null || TheChinWordtitle === void 0 ? void 0 : TheChinWordtitle.style.display) == "none" || (TheChinWordtitle === null || TheChinWordtitle === void 0 ? void 0 : TheChinWordtitle.innerHTML) == null) {
                         TheChinWordtitle.setAttribute("style", "display:block");
                         (_a = document.getElementById("ChineseWordtitle")) === null || _a === void 0 ? void 0 : _a.setAttribute("style", "display:block");
+                        TargetChinSentence.setAttribute("style", "display:block");
+                        (_b = document.getElementById("ChineseSentencetitle")) === null || _b === void 0 ? void 0 : _b.setAttribute("style", "display:block");
                     }
                     else {
                         TheChinWordtitle === null || TheChinWordtitle === void 0 ? void 0 : TheChinWordtitle.setAttribute("style", "display:none");
+                        TargetChinSentence === null || TargetChinSentence === void 0 ? void 0 : TargetChinSentence.setAttribute("style", "display:none");
                     }
                 }
                 else {
                     TheChinWordtitle === null || TheChinWordtitle === void 0 ? void 0 : TheChinWordtitle.setAttribute("style", "display:none");
+                    TargetChinSentence === null || TargetChinSentence === void 0 ? void 0 : TargetChinSentence.setAttribute("style", "display:none");
                 }
             }
         });
@@ -76,6 +93,8 @@ function ShowEnglishWordtitle() {
     else {
         TheEngWordtitle === null || TheEngWordtitle === void 0 ? void 0 : TheEngWordtitle.setAttribute("style", "display:none");
         TheChinWordtitle === null || TheChinWordtitle === void 0 ? void 0 : TheChinWordtitle.setAttribute("style", "display:none");
+        TargetEngSentence === null || TargetEngSentence === void 0 ? void 0 : TargetEngSentence.setAttribute("style", "display:none");
+        TargetChinSentence === null || TargetChinSentence === void 0 ? void 0 : TargetChinSentence.setAttribute("style", "display:none");
     }
 }
 //# sourceMappingURL=learnWords.js.map

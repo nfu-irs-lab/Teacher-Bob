@@ -42,8 +42,6 @@ document.getElementById("ShowEngWordButton").onclick = ShowEnglishWordtitle;
 function ShowEnglishWordtitle() {
     let TheEngWordtitle = document.getElementById("EnglishWordtitle");
     let TheChinWordtitle = document.getElementById("ChineseWordtitle");
-    // let TheEngSentencetitle = document.getElementById("EnglishSentencetitle");
-    // let TheChinSentencetitle = document.getElementById("ChineseSentencetitle");
     let InputWordNumber = GetInputWordNumber();
     let TargetEngWord = document.getElementById("EnglishWordtitle");
     let TargetChinWord = document.getElementById("ChineseWordtitle");

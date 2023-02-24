@@ -1,0 +1,8 @@
+import { EOLPackageHandler } from "./concrete_communication";
+let handler=new EOLPackageHandler();
+handler.handle([0x31,0x32,0x33,0x04,0x35,0x36]);
+handler.handle([0x37,0x04,0x35,0x36]);
+handler.handle([0x31,0x32,0x33,0x04,0x35,0x36]);
+while(handler.hasPackage()){
+    console.log(handler.getPackageAndNext())
+}

@@ -1,18 +1,17 @@
 export interface CommDevice{
     open():void;
     write(data:Uint8Array):number;
-    read(): Uint8Array;
+    writeString(data:string):number;
+    setOnReadCallback(callback:(data:Uint8Array)=>void):void;
     close():void;
 }
 
 export interface PackageHandler{
-    handle(data:number[]):void;
     hasPackage():boolean;
-    getPackageAndNext():number[];
-    convertToPackage(data:number[]):number[];
-}
+    getPackageAndNext():Uint8Array;
+    handle(data:Uint8Array):void;
 
-export interface ReConnectableDevice{
-    accept():[string, string, CommDevice];
-    close():void;
+    convertToPackage(data:Uint8Array):Uint8Array;
+    convertStringToPackage(data: string): Uint8Array
+
 }

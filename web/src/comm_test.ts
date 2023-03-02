@@ -1,8 +1,10 @@
-import { EOLPackageHandler } from "./concrete_communication";
+import { EOLPackageHandler,TCPClientCommDevice} from "./concrete_communication";
 let handler=new EOLPackageHandler();
-handler.handle([0x31,0x32,0x33,0x04,0x35,0x36]);
-handler.handle([0x37,0x04,0x35,0x36]);
-handler.handle([0x31,0x32,0x33,0x04,0x35,0x36]);
-while(handler.hasPackage()){
-    console.log(handler.getPackageAndNext())
-}
+let utf8decoder = new TextDecoder("utf-8");
+let commDevice=new TCPClientCommDevice(4444,'127.0.0.1',handler);
+commDevice.setOnReadCallback((data:Uint8Array)=>{
+    let text:string=utf8decoder.decode(data);
+    console.log(text);
+});
+
+commDevice.open();

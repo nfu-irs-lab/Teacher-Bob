@@ -136,8 +136,6 @@ function ShowSpecificInputWord()
     TargetChinSentence?.setAttribute("style", "display:none");
   }
 }
-
- 
       
 document.getElementById("ShowEngWordButton")!.onclick = ShowEnglishWordtitle;
 function ShowEnglishWordtitle()
@@ -212,6 +210,7 @@ function ShowEnglishWordtitle()
     TargetChinSentence?.setAttribute("style", "display:none");
   }
 }
+
 
 // function GetSpeedRateToUser(): number {
 //   let SpeakRate = document.getElementById(

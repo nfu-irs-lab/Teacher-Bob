@@ -63,24 +63,77 @@ function ChooseSpecificWordNumber(): number {
   return WordNum-1;
 }
 
+ // 特定英文單字顯示
 function ShowSpecificInputWord()
 {
   let TheEngWordtitle = document.getElementById("EnglishWordtitle");
+  let TheChinWordtitle = document.getElementById("ChineseWordtitle");
   let SpecificInputWordNumber = ChooseSpecificWordNumber();
-  let TargetSpecific = document.getElementById("EnglishWordtitle");
-  if (TheEngWordtitle?.style.display == "none" || TheEngWordtitle?.innerHTML == null) {
+  let TargetEngWord = document.getElementById("EnglishWordtitle");
+  let TargetChinWord = document.getElementById("ChineseWordtitle");
+  let TargetEngSentence = document.getElementById("EnglishSentencetitle");
+  let TargetChinSentence = document.getElementById("ChineseSentencetitle");
+  if (TheEngWordtitle?.style.display == "none" || TheEngWordtitle?.innerHTML == null) 
+  {
     TheEngWordtitle!.setAttribute("style", "display:block");
-    GetDataFromJson1.then(function (json) {
-      console.log(SpecificInputWordNumber);
-    // 特定英文單字顯示
-    let CurrentPageSpecificEngWord =
-    json[SpecificInputWordNumber].data.name;
-    TargetSpecific!.innerHTML = StringJson(CurrentPageSpecificEngWord);
-    console.log(CurrentPageSpecificEngWord);
-    
+    TargetEngSentence!.setAttribute("style", "display:block");
+    GetDataFromJson1.then(function (json) 
+    {
+      // 英文單字顯示
+      let CurrentPageEngWord =
+      json[SpecificInputWordNumber].data.name;
+      TargetEngWord!.innerHTML = StringJson(CurrentPageEngWord);
+      console.log(CurrentPageEngWord);
+
+      // 顯示英文例句
+      let CurrentPageEngSentence =
+      json[SpecificInputWordNumber].data.sentence;
+      TargetEngSentence!.innerHTML = StringJson(CurrentPageEngSentence);
+      console.log(CurrentPageEngSentence);
+
+      // 中文單字翻譯
+      let CurrentPageChinWord =
+      json[SpecificInputWordNumber].data.languages[0].tr_name;
+      TargetChinWord!.innerHTML = StringJson(CurrentPageChinWord);
+
+      // 中文例句翻譯
+      let CurrentPageChinSentence  =
+      json[SpecificInputWordNumber].data.languages[0].tr_sentence;
+      TargetChinSentence!.innerHTML = StringJson(CurrentPageChinSentence );
+
+      // 顯示中文單字翻譯與例句翻譯
+      document.getElementById("ShowChinWordButton")!.onclick = ShowEnglishWordtitle;
+      function ShowEnglishWordtitle()
+      {
+       if (TheEngWordtitle?.style.display == "block" || TheEngWordtitle?.innerHTML == null)   
+       {
+         if (TheChinWordtitle?.style.display == "none" || TheChinWordtitle?.innerHTML == null ) 
+         {
+           TheChinWordtitle!.setAttribute("style", "display:block");
+           document.getElementById("ChineseWordtitle")?.setAttribute("style", "display:block");
+           TargetChinSentence!.setAttribute("style", "display:block");
+           document.getElementById("ChineseSentencetitle")?.setAttribute("style", "display:block");
+         }
+         else 
+         {
+          TheChinWordtitle?.setAttribute("style", "display:none");
+          TargetChinSentence?.setAttribute("style", "display:none");
+         }
+        }
+        else
+        {
+          TheChinWordtitle?.setAttribute("style", "display:none"); 
+          TargetChinSentence?.setAttribute("style", "display:none");
+        }
+      }
     });
-  } else {
+  } 
+  else 
+  {
     TheEngWordtitle?.setAttribute("style", "display:none");
+    TheChinWordtitle?.setAttribute("style", "display:none"); 
+    TargetEngSentence?.setAttribute("style", "display:none");
+    TargetChinSentence?.setAttribute("style", "display:none");
   }
 }
 

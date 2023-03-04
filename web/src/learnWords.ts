@@ -38,7 +38,8 @@ speechSynthesis.addEventListener("voiceschanged", function ()
     LanguageSelect!.appendChild(OptionFromBrowser);
   }
 });
-      
+
+//單字選單      
 GetDataFromJson1.then(function (json) 
 {
   let TotalAmountOfVac = json.length;
@@ -51,6 +52,39 @@ GetDataFromJson1.then(function (json)
     Vaclist!.appendChild(VacNameFromJson);
   }
 });
+
+// 特定單字匯入
+let WordNum: number;
+function ChooseSpecificWordNumber(): number {
+  const InputWord = document.getElementById(
+    "VacSelect"
+  ) as HTMLInputElement | null;
+  WordNum = Number(InputWord?.value.slice(2));
+  return WordNum-1;
+}
+
+function ShowSpecificInputWord()
+{
+  let TheEngWordtitle = document.getElementById("EnglishWordtitle");
+  let SpecificInputWordNumber = ChooseSpecificWordNumber();
+  let TargetSpecific = document.getElementById("EnglishWordtitle");
+  if (TheEngWordtitle?.style.display == "none" || TheEngWordtitle?.innerHTML == null) {
+    TheEngWordtitle!.setAttribute("style", "display:block");
+    GetDataFromJson1.then(function (json) {
+      console.log(SpecificInputWordNumber);
+    // 特定英文單字顯示
+    let CurrentPageSpecificEngWord =
+    json[SpecificInputWordNumber].data.name;
+    TargetSpecific!.innerHTML = StringJson(CurrentPageSpecificEngWord);
+    console.log(CurrentPageSpecificEngWord);
+    
+    });
+  } else {
+    TheEngWordtitle?.setAttribute("style", "display:none");
+  }
+}
+
+ 
       
 document.getElementById("ShowEngWordButton")!.onclick = ShowEnglishWordtitle;
 function ShowEnglishWordtitle()
@@ -91,8 +125,8 @@ function ShowEnglishWordtitle()
       TargetChinSentence!.innerHTML = StringJson(CurrentPageChinSentence );
 
       // 顯示中文單字翻譯與例句翻譯
-      document.getElementById("ShowChinWordButton")!.onclick = ShowChineseWordtitle;
-      function ShowChineseWordtitle()
+      document.getElementById("ShowChinWordButton")!.onclick = ShowEnglishWordtitle;
+      function ShowEnglishWordtitle()
       {
        if (TheEngWordtitle?.style.display == "block" || TheEngWordtitle?.innerHTML == null)   
        {
@@ -125,3 +159,67 @@ function ShowEnglishWordtitle()
     TargetChinSentence?.setAttribute("style", "display:none");
   }
 }
+
+// function GetSpeedRateToUser(): number {
+//   let SpeakRate = document.getElementById(
+//     "LanguageSpeed"
+//   ) as HTMLInputElement | null;
+//   let UserChoosenRate = Number(SpeakRate?.value);
+//   return UserChoosenRate;
+// }
+
+// function GetChoosenVoicesToUser(): number {
+//   let VoiceChoose = document.getElementById(
+//     "LanguageSelect"
+//   ) as HTMLInputElement | null;
+//   let LanguageNumber = Number(VoiceChoose?.value);
+//   return LanguageNumber;
+// }
+
+// document.getElementById("PlayButton")!.onclick = PlayVoice;
+// function PlayVoice() {
+//   let ReadTarget = document.getElementById("EnglishWordtitle")?.innerText;
+//   var msg = new SpeechSynthesisUtterance(ReadTarget);
+//   msg.rate = GetSpeedRateToUser();
+//   //從開啟的瀏覽器中獲取該瀏覽器支援的voice API
+//   var voices = window.speechSynthesis.getVoices();
+//   msg.voice = voices[GetChoosenVoicesToUser()];
+//   window.speechSynthesis.speak(msg);
+// }
+
+// document.getElementById("AutoPlayButton")!.onclick = AutoPlayFunction;
+// function AutoPlayFunction() {
+//   let InputWordNumber = GetInputWordNumber();
+//   GetDataFromJson.then(function (json) {
+//     let Storylength = json[InputWordNumber].data.name.length;//需要判斷邊界
+//     for (let i = 0; i < Storylength; i++) {
+//       let ReadTarget = StringfyJson(json[InputWordNumber].data[i].name);
+
+//       let msg = new SpeechSynthesisUtterance(ReadTarget);
+//       msg.rate = GetSpeedRateToUser();
+//       var voices = window.speechSynthesis.getVoices();
+//       msg.voice = voices[GetChoosenVoicesToUser()];
+//       window.speechSynthesis.speak(msg);
+//     }
+//   });
+// }
+
+// document.getElementById("StopButton")!.onclick = StopPlayFunction;
+// function StopPlayFunction() {
+//   speechSynthesis.cancel();
+// }
+
+// document.getElementById("PauseButton")!.onclick = PauseFunction;
+// let Speaking_State: boolean = true;
+// function PauseFunction() {
+//   let PauseButton = document.getElementById("PauseButton");
+//   if (Speaking_State == true) {
+//     speechSynthesis.pause();
+//     PauseButton!.textContent = "繼續播放";
+//     Speaking_State = false;
+//   } else {
+//     speechSynthesis.resume();
+//     PauseButton!.textContent = "暫停播放";
+//     Speaking_State = true;
+//   }
+// }

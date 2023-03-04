@@ -26,12 +26,17 @@
 
     <button id="PlayButton" style="display: block">播放</button>
 
-    <select id="VacSelect" style="display: block">
+    <select id="VacSelect">
       <option value="" disabled>請選擇單字</option>
+      <input type="submit" value="Submit" onclick="ShowSpecificInputWord()" />
     </select>
+
+    
+
 
     <select id="LanguageSelect" style="display: block">
       <option value="" disabled>請選擇語言</option>
+    
     </select>
 
     <select id="LanguageSpeed" style="display: block">
@@ -44,6 +49,14 @@
       <option value="1.5">1.5</option>
       <option value="2.0">2.0</option>
     </select>
+
+    <button id="AutoPlayButton" style="display: block">自動播放</button>
+
+      <button id="StopButton" style="display: block">停止播放</button>
+
+      <button id="PauseButton" style="display: block">暫停播放</button>
+    </div>
+    
     <script type="text/Javascript" src="./learnWords.js"></script>
   </body>
 </html>

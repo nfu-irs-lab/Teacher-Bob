@@ -8,18 +8,35 @@
   </head>
 
   <body>
+    <button id="LastVacButton" style="display: block">上一個單字</button>
     <button id="NextVacButton" style="display: block">下一個單字</button>
 
-    <button id="LastVacButton" style="display: block">上一個單字</button>
+    <button id="ShowEngWordButton" style="display: block">
+      顯示英文單字
+    </button>
+    
+    <button id="ShowChinWordButton" style="display: block">
+      顯示中文翻譯
+    </button>
+    
+    <h2 id="EnglishWordtitle" style="display: none"></h2>
+    <div id="ChineseWordtitle" style="display: none"></div>
+    <h2 id="EnglishSentencetitle" style="display: none"></h2>
+    <div id="ChineseSentencetitle" style="display: none"></div>
 
     <button id="PlayButton" style="display: block">播放</button>
 
-    <select id="VacSelect" style="display: block">
+    <select id="VacSelect">
       <option value="" disabled>請選擇單字</option>
+      <input type="submit" value="Submit" onclick="ShowSpecificInputWord()" />
     </select>
+
+    
+
 
     <select id="LanguageSelect" style="display: block">
       <option value="" disabled>請選擇語言</option>
+    
     </select>
 
     <select id="LanguageSpeed" style="display: block">
@@ -32,6 +49,14 @@
       <option value="1.5">1.5</option>
       <option value="2.0">2.0</option>
     </select>
+
+    <button id="AutoPlayButton" style="display: block">自動播放</button>
+
+      <button id="StopButton" style="display: block">停止播放</button>
+
+      <button id="PauseButton" style="display: block">暫停播放</button>
+    </div>
+    
     <script type="text/Javascript" src="./learnWords.js"></script>
   </body>
 </html>

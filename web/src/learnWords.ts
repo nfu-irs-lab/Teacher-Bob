@@ -212,66 +212,41 @@ function ShowEnglishWordtitle()
 }
 
 
-// function GetSpeedRateToUser(): number {
-//   let SpeakRate = document.getElementById(
-//     "LanguageSpeed"
-//   ) as HTMLInputElement | null;
-//   let UserChoosenRate = Number(SpeakRate?.value);
-//   return UserChoosenRate;
-// }
+function GetSpeedRateToUser(): number {
+  let SpeakRate = document.getElementById(
+    "LanguageSpeed"
+  ) as HTMLInputElement | null;
+  let UserChoosenRate = Number(SpeakRate?.value);
+  return UserChoosenRate;
+}
 
-// function GetChoosenVoicesToUser(): number {
-//   let VoiceChoose = document.getElementById(
-//     "LanguageSelect"
-//   ) as HTMLInputElement | null;
-//   let LanguageNumber = Number(VoiceChoose?.value);
-//   return LanguageNumber;
-// }
+function GetChoosenVoicesToUser(): number {
+  let VoiceChoose = document.getElementById(
+    "LanguageSelect"
+  ) as HTMLInputElement | null;
+  let LanguageNumber = Number(VoiceChoose?.value);
+  return LanguageNumber;
+}
 
-// document.getElementById("PlayButton")!.onclick = PlayVoice;
-// function PlayVoice() {
-//   let ReadTarget = document.getElementById("EnglishWordtitle")?.innerText;
-//   var msg = new SpeechSynthesisUtterance(ReadTarget);
-//   msg.rate = GetSpeedRateToUser();
-//   //從開啟的瀏覽器中獲取該瀏覽器支援的voice API
-//   var voices = window.speechSynthesis.getVoices();
-//   msg.voice = voices[GetChoosenVoicesToUser()];
-//   window.speechSynthesis.speak(msg);
-// }
+document.getElementById("PlayButton")!.onclick = PlayVoice;
+function PlayVoice() {
+  let ReadWordTarget = document.getElementById("EnglishWordtitle")?.innerText;
+  let ReadSentenceTarget = document.getElementById("EnglishSentencetitle")?.innerText;
+  var msgWord = new SpeechSynthesisUtterance(ReadWordTarget);
+  var msgSentence = new SpeechSynthesisUtterance(ReadSentenceTarget);
+  msgWord.rate = GetSpeedRateToUser();
+  msgSentence.rate = GetSpeedRateToUser();
+  //從開啟的瀏覽器中獲取該瀏覽器支援的voice API
+  var voices = window.speechSynthesis.getVoices();
+  msgWord.voice = voices[GetChoosenVoicesToUser()];
+  window.speechSynthesis.speak(msgWord);
+  msgSentence.voice = voices[GetChoosenVoicesToUser()];
+  window.speechSynthesis.speak(msgSentence);
+}
 
-// document.getElementById("AutoPlayButton")!.onclick = AutoPlayFunction;
-// function AutoPlayFunction() {
-//   let InputWordNumber = GetInputWordNumber();
-//   GetDataFromJson.then(function (json) {
-//     let Storylength = json[InputWordNumber].data.name.length;//需要判斷邊界
-//     for (let i = 0; i < Storylength; i++) {
-//       let ReadTarget = StringfyJson(json[InputWordNumber].data[i].name);
 
-//       let msg = new SpeechSynthesisUtterance(ReadTarget);
-//       msg.rate = GetSpeedRateToUser();
-//       var voices = window.speechSynthesis.getVoices();
-//       msg.voice = voices[GetChoosenVoicesToUser()];
-//       window.speechSynthesis.speak(msg);
-//     }
-//   });
-// }
 
-// document.getElementById("StopButton")!.onclick = StopPlayFunction;
-// function StopPlayFunction() {
-//   speechSynthesis.cancel();
-// }
-
-// document.getElementById("PauseButton")!.onclick = PauseFunction;
-// let Speaking_State: boolean = true;
-// function PauseFunction() {
-//   let PauseButton = document.getElementById("PauseButton");
-//   if (Speaking_State == true) {
-//     speechSynthesis.pause();
-//     PauseButton!.textContent = "繼續播放";
-//     Speaking_State = false;
-//   } else {
-//     speechSynthesis.resume();
-//     PauseButton!.textContent = "暫停播放";
-//     Speaking_State = true;
-//   }
-// }
+document.getElementById("StopButton")!.onclick = StopPlayFunction;
+function StopPlayFunction() {
+  speechSynthesis.cancel();
+}

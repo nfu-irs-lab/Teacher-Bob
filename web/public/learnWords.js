@@ -10,10 +10,32 @@ function StringJson(JsonWords) {
 }
 const GetDataFromJson1 = fetch("http://127.0.0.1:5500/public/resourse/vocabularies.json").then((response) => response.json());
 let grabWord = 0;
+let NextGrabWord = 0;
+var CheckWord = 0;
 //利用亂數抓單字庫的單字
 function GetInputWordNumber() {
     grabWord = Math.floor(Math.random() * 51); //待改
     console.log(grabWord);
+    document.getElementById("NextWordButton").onclick = NextWord;
+    function NextWord() {
+        NextGrabWord = GetInputWordNumber();
+        switch (true) {
+            case NextGrabWord == CheckWord: //如果亂數值等於紀錄值
+                GetInputWordNumber(); //重新取亂數
+                break;
+            default: //如果亂數值不等於紀錄值
+                CheckWord = NextGrabWord; //更新紀錄值
+                break;
+        }
+        let TargetEngWord = document.getElementById("EnglishWordtitle");
+        let TargetEngSentence = document.getElementById("EnglishSentencetitle");
+        GetDataFromJson1.then(function (json) {
+            let CurrentPageEngWord = json[CheckWord].data.name;
+            TargetEngWord.innerHTML = StringJson(CurrentPageEngWord);
+            let CurrentPageEngSentence = json[CheckWord].data.sentence;
+            TargetEngSentence.innerHTML = StringJson(CurrentPageEngSentence);
+        });
+    }
     return grabWord;
 }
 //語言選單

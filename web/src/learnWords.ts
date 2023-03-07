@@ -37,15 +37,26 @@ function GetInputWordNumber(): number
       break;
     }
     let TargetEngWord = document.getElementById("EnglishWordtitle");
+    let TargetChinWord = document.getElementById("ChineseWordtitle");
     let TargetEngSentence = document.getElementById("EnglishSentencetitle");
+    let TargetChinSentence = document.getElementById("ChineseSentencetitle");
     GetDataFromJson1.then(function (json) 
     {
       let CurrentPageEngWord =
       json[CheckWord].data.name;
       TargetEngWord!.innerHTML = StringJson(CurrentPageEngWord);
+
+      let CurrentPageChinWord =
+      json[CheckWord].data.languages[0].tr_name;
+      TargetChinWord!.innerHTML = StringJson(CurrentPageChinWord);
+
       let CurrentPageEngSentence =
       json[CheckWord].data.sentence;
       TargetEngSentence!.innerHTML = StringJson(CurrentPageEngSentence);
+
+      let CurrentPageChinSentence  =
+      json[CheckWord].data.languages[0].tr_sentence;
+      TargetChinSentence!.innerHTML = StringJson(CurrentPageChinSentence );
     })
   }
   return grabWord

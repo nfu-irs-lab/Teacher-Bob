@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StoryTelling</title>
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div id="SelectPage" style="display: block">
+      <label id="Choose" for="Story">Choose a story:</label>
+      <select id="Storylist">
+        <option value="" disabled>請選擇故事</option>
+        <option value="story1">年獸的故事</option>
+        <option value="story2">三隻小豬</option>
+        <option value="story3">小紅帽</option>
+        <input type="submit" value="Submit" onclick="InitializePage()" />
+      </select>
+    </div>
+
+    <div id="WorkPage" style="display: none">
+      <h3 id="EnglishSubtitleLabel" style="display: block"></h3>
+      <h3 id="ChineseSubtitleLabel" style="display: block"></h3>
+
+      <button
+        id="ShowEnglishButton"
+        onclick="ShowEnglishSubtitle()"
+        style="display: block"
+      >
+        顯示英文字幕
+      </button>
+
+      <h2 id="EnglishSubtitle" style="display: none"></h2>
+      <h2 id="ChineseSubtitle" style="display: none"></h2>
+
+      <button id="NextPageButton" style="display: block">下一句</button>
+
+      <button id="LastPageButton" style="display: block">上一句</button>
+
+      <button id="PlayButton" style="display: block">播放</button>
+      <select id="LanguageSelect">
+        <option value="" disabled>請選擇語言</option>
+      </select>
+    </div>
+
+    <script type="text/Javascript" src="./StoryTelling.js"></script>
+  </body>
+</html>

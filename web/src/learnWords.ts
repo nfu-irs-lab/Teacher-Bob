@@ -16,11 +16,49 @@ const GetDataFromJson1 = fetch(
 ).then((response) => response.json());
 
 let grabWord : number = 0
+let NextGrabWord : number = 0
+var CheckWord :number = 0
  //利用亂數抓單字庫的單字
 function GetInputWordNumber(): number
 {
   grabWord = Math.floor(Math.random()*51)//待改
   console.log(grabWord)
+  
+  document.getElementById("NextWordButton")!.onclick = NextWord;
+  function NextWord()
+  {
+    NextGrabWord =  GetInputWordNumber();
+    switch(true){
+      case NextGrabWord==CheckWord: //如果亂數值等於紀錄值
+      GetInputWordNumber(); //重新取亂數
+      break;
+      default: //如果亂數值不等於紀錄值
+      CheckWord = NextGrabWord; //更新紀錄值
+      break;
+    }
+    let TargetEngWord = document.getElementById("EnglishWordtitle");
+    let TargetChinWord = document.getElementById("ChineseWordtitle");
+    let TargetEngSentence = document.getElementById("EnglishSentencetitle");
+    let TargetChinSentence = document.getElementById("ChineseSentencetitle");
+    GetDataFromJson1.then(function (json) 
+    {
+      let CurrentPageEngWord =
+      json[CheckWord].data.name;
+      TargetEngWord!.innerHTML = StringJson(CurrentPageEngWord);
+
+      let CurrentPageChinWord =
+      json[CheckWord].data.languages[0].tr_name;
+      TargetChinWord!.innerHTML = StringJson(CurrentPageChinWord);
+
+      let CurrentPageEngSentence =
+      json[CheckWord].data.sentence;
+      TargetEngSentence!.innerHTML = StringJson(CurrentPageEngSentence);
+
+      let CurrentPageChinSentence  =
+      json[CheckWord].data.languages[0].tr_sentence;
+      TargetChinSentence!.innerHTML = StringJson(CurrentPageChinSentence );
+    })
+  }
   return grabWord
 }
     
@@ -212,66 +250,40 @@ function ShowEnglishWordtitle()
 }
 
 
-// function GetSpeedRateToUser(): number {
-//   let SpeakRate = document.getElementById(
-//     "LanguageSpeed"
-//   ) as HTMLInputElement | null;
-//   let UserChoosenRate = Number(SpeakRate?.value);
-//   return UserChoosenRate;
-// }
 
-// function GetChoosenVoicesToUser(): number {
-//   let VoiceChoose = document.getElementById(
-//     "LanguageSelect"
-//   ) as HTMLInputElement | null;
-//   let LanguageNumber = Number(VoiceChoose?.value);
-//   return LanguageNumber;
-// }
+function GetSpeedRateToUser(): number {
+  let SpeakRate = document.getElementById(
+    "LanguageSpeed"
+  ) as HTMLInputElement | null;
+  let UserChoosenRate = Number(SpeakRate?.value);
+  return UserChoosenRate;
+}
 
-// document.getElementById("PlayButton")!.onclick = PlayVoice;
-// function PlayVoice() {
-//   let ReadTarget = document.getElementById("EnglishWordtitle")?.innerText;
-//   var msg = new SpeechSynthesisUtterance(ReadTarget);
-//   msg.rate = GetSpeedRateToUser();
-//   //從開啟的瀏覽器中獲取該瀏覽器支援的voice API
-//   var voices = window.speechSynthesis.getVoices();
-//   msg.voice = voices[GetChoosenVoicesToUser()];
-//   window.speechSynthesis.speak(msg);
-// }
+function GetChoosenVoicesToUser(): number {
+  let VoiceChoose = document.getElementById(
+    "LanguageSelect"
+  ) as HTMLInputElement | null;
+  let LanguageNumber = Number(VoiceChoose?.value);
+  return LanguageNumber;
+}
 
-// document.getElementById("AutoPlayButton")!.onclick = AutoPlayFunction;
-// function AutoPlayFunction() {
-//   let InputWordNumber = GetInputWordNumber();
-//   GetDataFromJson.then(function (json) {
-//     let Storylength = json[InputWordNumber].data.name.length;//需要判斷邊界
-//     for (let i = 0; i < Storylength; i++) {
-//       let ReadTarget = StringfyJson(json[InputWordNumber].data[i].name);
+document.getElementById("PlayButton")!.onclick = PlayVoice;
+function PlayVoice() {
+  let ReadWordTarget = document.getElementById("EnglishWordtitle")?.innerText;
+  let ReadSentenceTarget = document.getElementById("EnglishSentencetitle")?.innerText;
+  var msgWord = new SpeechSynthesisUtterance(ReadWordTarget);
+  var msgSentence = new SpeechSynthesisUtterance(ReadSentenceTarget);
+  msgWord.rate = GetSpeedRateToUser();
+  msgSentence.rate = GetSpeedRateToUser();
+  //從開啟的瀏覽器中獲取該瀏覽器支援的voice API
+  var voices = window.speechSynthesis.getVoices();
+  msgWord.voice = voices[GetChoosenVoicesToUser()];
+  window.speechSynthesis.speak(msgWord);
+  msgSentence.voice = voices[GetChoosenVoicesToUser()];
+  window.speechSynthesis.speak(msgSentence);
+}
 
-//       let msg = new SpeechSynthesisUtterance(ReadTarget);
-//       msg.rate = GetSpeedRateToUser();
-//       var voices = window.speechSynthesis.getVoices();
-//       msg.voice = voices[GetChoosenVoicesToUser()];
-//       window.speechSynthesis.speak(msg);
-//     }
-//   });
-// }
-
-// document.getElementById("StopButton")!.onclick = StopPlayFunction;
-// function StopPlayFunction() {
-//   speechSynthesis.cancel();
-// }
-
-// document.getElementById("PauseButton")!.onclick = PauseFunction;
-// let Speaking_State: boolean = true;
-// function PauseFunction() {
-//   let PauseButton = document.getElementById("PauseButton");
-//   if (Speaking_State == true) {
-//     speechSynthesis.pause();
-//     PauseButton!.textContent = "繼續播放";
-//     Speaking_State = false;
-//   } else {
-//     speechSynthesis.resume();
-//     PauseButton!.textContent = "暫停播放";
-//     Speaking_State = true;
-//   }
-// }
+document.getElementById("StopButton")!.onclick = StopPlayFunction;
+function StopPlayFunction() {
+  speechSynthesis.cancel();
+}

@@ -111,10 +111,7 @@ function ShowSpecificInputWord()
   let TargetChinWord = document.getElementById("ChineseWordtitle");
   let TargetEngSentence = document.getElementById("EnglishSentencetitle");
   let TargetChinSentence = document.getElementById("ChineseSentencetitle");
-  if (TheEngWordtitle?.style.display == "none" || TheEngWordtitle?.innerHTML == null) 
-  {
-    TheEngWordtitle!.setAttribute("style", "display:block");
-    TargetEngSentence!.setAttribute("style", "display:block");
+  
     GetDataFromJson1.then(function (json) 
     {
       // 英文單字顯示
@@ -143,37 +140,15 @@ function ShowSpecificInputWord()
       document.getElementById("ShowChinWordButton")!.onclick = ShowEnglishWordtitle;
       function ShowEnglishWordtitle()
       {
-       if (TheEngWordtitle?.style.display == "block" || TheEngWordtitle?.innerHTML == null)   
-       {
-         if (TheChinWordtitle?.style.display == "none" || TheChinWordtitle?.innerHTML == null ) 
-         {
+      
            TheChinWordtitle!.setAttribute("style", "display:block");
            document.getElementById("ChineseWordtitle")?.setAttribute("style", "display:block");
            TargetChinSentence!.setAttribute("style", "display:block");
-           document.getElementById("ChineseSentencetitle")?.setAttribute("style", "display:block");
-         }
-         else 
-         {
-          TheChinWordtitle?.setAttribute("style", "display:none");
-          TargetChinSentence?.setAttribute("style", "display:none");
-         }
-        }
-        else
-        {
-          TheChinWordtitle?.setAttribute("style", "display:none"); 
-          TargetChinSentence?.setAttribute("style", "display:none");
-        }
+           document.getElementById("ChineseSentencetitle")?.setAttribute("style", "display:block");  
       }
     });
   } 
-  else 
-  {
-    TheEngWordtitle?.setAttribute("style", "display:none");
-    TheChinWordtitle?.setAttribute("style", "display:none"); 
-    TargetEngSentence?.setAttribute("style", "display:none");
-    TargetChinSentence?.setAttribute("style", "display:none");
-  }
-}
+
       
 document.getElementById("ShowEngWordButton")!.onclick = ShowEnglishWordtitle;
 function ShowEnglishWordtitle()
@@ -247,6 +222,7 @@ function ShowEnglishWordtitle()
     TargetEngSentence?.setAttribute("style", "display:none");
     TargetChinSentence?.setAttribute("style", "display:none");
   }
+
 }
 
 

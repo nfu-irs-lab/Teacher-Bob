@@ -78,10 +78,11 @@ function ShowEnglishSubtitle() {
       let CurrentPageEngSubtitle =
         json[InputStoryNumber].data.pages[CurrentPageNumber].text;
       Target!.innerHTML = StringfyJson(CurrentPageEngSubtitle);
-      console.log(CurrentPageNumber);
     });
+    document.getElementById("ShowEnglishButton")!.innerText = "關閉英文字幕";
   } else {
     EngSubtitle?.setAttribute("style", "display:none");
+    document.getElementById("ShowEnglishButton")!.innerText = "開啟英文字幕";
   }
 }
 
@@ -134,24 +135,31 @@ function Play() {
   msg.voice = voices[GetChoosenVoicesFromUser()];
   window.speechSynthesis.speak(msg);
 }
-
+let i = 0;
 document.getElementById("AutoPlayButton")!.onclick = AutoPlay;
 function AutoPlay() {
   let InputStoryNumber = GetInputStoryNumber();
   GetDataFromJson.then(function (json) {
     let Storylength = json[InputStoryNumber].data.pages.length;
-    for (let i = 0; i < Storylength; i++) {
-      let ReadTarget = StringfyJson(json[InputStoryNumber].data.pages[i].text);
-
-      let msg = new SpeechSynthesisUtterance(ReadTarget);
-      msg.rate = GetSpeedRateFromUser();
-      var voices = window.speechSynthesis.getVoices();
-      msg.voice = voices[GetChoosenVoicesFromUser()];
-      window.speechSynthesis.speak(msg);
-    }
+    if (i < Storylength) {
+      if (window.speechSynthesis.speaking == false) {
+        let ReadTarget = StringfyJson(
+          json[InputStoryNumber].data.pages[i].text
+        );
+        let msg = new SpeechSynthesisUtterance(ReadTarget);
+        msg.rate = GetSpeedRateFromUser();
+        var voices = window.speechSynthesis.getVoices();
+        msg.voice = voices[GetChoosenVoicesFromUser()];
+        document.getElementById("EnglishSubtitle")!.innerText = msg.text;
+        window.speechSynthesis.speak(msg);
+        i++;
+        msg.addEventListener("end", function () {
+          AutoPlay();
+        });
+      }
+    } else if (i >= Storylength) i = 0;
   });
 }
-
 document.getElementById("StopButton")!.onclick = StopPlay;
 function StopPlay() {
   speechSynthesis.cancel();
@@ -171,4 +179,3 @@ function Pause() {
     SpeakingState = true;
   }
 }
-//這是註解

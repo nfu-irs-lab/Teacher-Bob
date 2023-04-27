@@ -50,7 +50,7 @@ def doAction(robot: Dynamixel, csv_file):
 
 
 bot_description = ".*FT232R.*"
-robot = Dynamixel("COM3", 115200)
+robot = Dynamixel(getSerialNameByDescription(bot_description), 115200)
 agent = CSVServoAgent("../servos.csv")
 for servo in agent.getDefinedServos():
     robot.appendServo(servo)
@@ -60,4 +60,4 @@ robot.open()
 for _id in robot.getAllServosId():
     print(_id, ":", robot.ping(_id))
 
-doAction(robot, "../actions/tennisracket.csv")
+doAction(robot, "../actions/attack.csv")

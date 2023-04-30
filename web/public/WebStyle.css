@@ -1,0 +1,33 @@
+html{
+    background-color:#ffdf3f;
+}
+
+.title{
+    font-size: 70px;
+    text-align: center;
+    display: flex;
+    justify-content: center;    
+    align-items: center;
+}
+
+h1{
+    Color:#09bcbd;
+}
+
+.functionlist{
+    width: 18rem;
+    display: inline-block;
+    text-align: center;
+    margin: 2rem;
+    padding: 1rem;
+    font-size: 25px;
+    background-color:#55cbff;
+    border: 5px solid #09bcbd;
+    border-radius: 3rem;
+}
+
+.functionlist:active {
+    transform: scale(1);
+    box-shadow: inset 0 0 10px 530px white;
+    transition: .1s;
+  }

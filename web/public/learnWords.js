@@ -1,5 +1,5 @@
 "use strict";
-//開啟learnWord的網址
+// 開啟learnWord的網址
 function goToLearnWord() {
     open('http://127.0.0.1:5500/public/learnWords.html');
 }
@@ -195,5 +195,15 @@ function PlayVoice() {
 document.getElementById("StopButton").onclick = StopPlayFunction;
 function StopPlayFunction() {
     speechSynthesis.cancel();
+}
+document.getElementById("menu__button").onclick = OpenPlayFunction;
+function OpenPlayFunction() {
+    this.classList.toggle("change");
+    document.getElementById("toright").style.width = "30%";
+}
+document.getElementById("closeplay").onclick = ClosePlayFunction;
+function ClosePlayFunction() {
+    this.classList.toggle("change");
+    document.getElementById("toright").style.width = "0%";
 }
 //# sourceMappingURL=learnWords.js.map

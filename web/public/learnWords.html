@@ -4,56 +4,65 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>學單字</title>
-    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <link href="./learnWordsStyle.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
-    <h2 id="EnglishWordtitle" style="display: none"></h2>
-    <div id="ChineseWordtitle" style="display: none"></div>
-    <h2 id="EnglishSentencetitle" style="display: none"></h2>
-    <div id="ChineseSentencetitle" style="display: none"></div>
 
-    <button id="ShowEngWordButton" style="display: block">
-      顯示英文單字
-    </button>
-    
-    <button id="ShowChinWordButton" style="display: block">
-      顯示中文翻譯
-    </button>
-    
-    
-    <button id="NextWordButton" style="display: block">下一個單字</button>
-
-    <button id="PlayButton" style="display: block">播放</button>
-
-    <select id="VacSelect">
-      <option value="" disabled>請選擇單字</option>
-      <input type="submit" value="Submit" onclick="ShowSpecificInputWord()" />
-    </select>
-
-    
-
-
-    <select id="LanguageSelect" style="display: block">
-      <option value="" disabled>請選擇語言</option>
-    
-    </select>
-
-    <select id="LanguageSpeed" style="display: block">
-      <option value="" disabled>請選擇速度</option>
-      <option value="0.3">0.3</option>
-      <option value="0.5">0.5</option>
-      <option value="0.8">0.8</option>
-      <option value="1.0">1.0</option>
-      <option value="1.2">1.2</option>
-      <option value="1.5">1.5</option>
-      <option value="2.0">2.0</option>
-    </select>
-
-      <button id="StopButton" style="display: block">停止播放</button>
-
+    <div id="menu__button">
+      <div class="bar1"></div>
+      <div class="bar2"></div>
+      <div class="bar3"></div>
     </div>
+
+    <div id="toright" class="overlay">
+      <a href="javascript:void(0)" id="closeplay">&times;</a>
+      <div class="overlay-content">
+        <div class="a">
+          <select class="Language" id="LanguageSelect" style="display: block">
+            <option value="" disabled>請選擇播放語言</option>
+          </select>
+      
+          <select class="speed" id="LanguageSpeed" style="display: block">
+            <option class="speed" value="" disabled>請選擇速度</option>
+            <option class="speed" value="0.3">0.3</option>
+            <option class="speed" value="0.5">0.5</option>
+            <option class="speed" value="0.8">0.8</option>
+            <option class="speed" value="1.0">1.0</option>
+            <option class="speed" value="1.2">1.2</option>
+            <option class="speed" value="1.5">1.5</option>
+            <option class="speed" value="2.0">2.0</option>
+          </select>
+      
+          <div class="WordSetup">
+            <select class="ChooseWord" id="VacSelect">
+              <option class="ChooseWord">請選擇單字</option>
+              <input class="ChooseButton" type="submit" value="選擇" onclick="ShowSpecificInputWord()" />
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="ShowWord">
+      <h2 class="word" id="EnglishWordtitle" style="display: none"></h2>
+      <h2 class="word" id="ChineseWordtitle" style="display: none"></h2>
+      <h2 class="word" id="EnglishSentencetitle" style="display: none"></h2>
+      <h2 class="word" id="ChineseSentencetitle" style="display: none"></h2>
+    </div>
+
+  
+    <div class="colum">
+      <button  class="functionlist" id="ShowEngWordButton" style="display: block">顯示英文單字</button>
+      <button  class="functionlist" id="ShowChinWordButton" style="display: block">顯示中文翻譯</button>
+      <button  class="functionlist" id="NextWordButton" style="display: block">下一個單字</button>
+      <button  class="functionlist" id="PlayButton" style="display: block">播放</button>
+      <button  class="functionlist" id="StopButton" style="display: block">停止播放</button>
+    </div>
+
     
+    
+
     <script type="text/Javascript" src="./learnWords.js"></script>
   </body>
 </html>

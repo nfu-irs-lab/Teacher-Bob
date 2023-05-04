@@ -76,7 +76,7 @@
     "data": {
       "name": "bus",
       "group": "Transportation",
-      "sentence": "I alwaays take a bus to school.",
+      "sentence": "I always take a bus to school.",
       "definition": "a large vehicle in which people are driven from one place to another",
       "face": "happy",
       "action": "gift.csv",

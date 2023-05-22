@@ -199,7 +199,7 @@ function StopPlayFunction() {
 document.getElementById("menu__button").onclick = OpenPlayFunction;
 function OpenPlayFunction() {
     this.classList.toggle("change");
-    document.getElementById("toright").style.width = "100%";
+    document.getElementById("toright").style.width = "50%";
 }
 document.getElementById("closeplay").onclick = ClosePlayFunction;
 function ClosePlayFunction() {

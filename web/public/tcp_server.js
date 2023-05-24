@@ -15,7 +15,7 @@ var server = net.createServer((socket) => {
         socket.write(handelr.convertStringToPackage('Hello World'));
 });
 // 未指定port位置，則會動態使用系統可用Port
-server.listen({ host: "127.0.0.1", port: 4444 }, function () {
+server.listen({ host: "192.168.175.224", port: 4444 }, function () {//需要自己電腦的ip位置才能在不同電腦進行連線
     var address = server.address();
     console.log("opened server on %j", address);
 });
